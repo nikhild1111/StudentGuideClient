@@ -2,7 +2,8 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { useDispatch } from "react-redux"
+import { checkAuthOnAppLoad } from "./services/operations/authAPI"
 import Home from './pages/Home';
 import AdmissionPage from './pages/AdmissionPage';
 import HostelPage from './pages/HostelPage';
@@ -14,9 +15,14 @@ import MentorPage from './pages/MentorPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import VerifyEmail from './pages/VerifyEmail';
+import { useEffect } from 'react';
 function App() {
-  const [count, setCount] = useState(0)
 
+  const dispatch=useDispatch();
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    dispatch(checkAuthOnAppLoad())
+  }, [])
   return (
     <>
       <div className="w-full bg-richblack-900">

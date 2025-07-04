@@ -570,8 +570,10 @@ import hostel3 from '../assets/dyphostel/hostel3.png';
 import hostel4 from '../assets/dyphostel/hostel4.png';
 import hostel5 from '../assets/dyphostel/hostel5.png';
 import hostel6 from '../assets/dyphostel/hostel6.png';
-
-
+import ND from '../assets/Images/ND.jpg';
+import bookshare from '../assets/Images/bookshare.png';
+import food from '../assets/Images/food.png';
+import room from '../assets/Images/room.png';
 
 const LandingPage = () => {
 
@@ -749,7 +751,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     <div className="flex-1 w-full">
       <div className="bg-gradient-to-tr from-blue-900/50 to-blue-700/20 rounded-lg overflow-hidden shadow-lg">
         <img
-          src="/assets/books/students-book-swap.png"
+          src={bookshare}
           alt="Student Book Exchange"
           className="w-full h-auto object-cover"
         />
@@ -811,7 +813,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     <div className="flex-1 w-full max-w-md">
       <div className="bg-gradient-to-tr from-yellow-900/40 to-yellow-700/20 rounded-lg overflow-hidden shadow-xl">
         <img
-          src="public\assets\food\mess-placeholder.png"
+          src={food}
           alt="Nearby Mess Options"
           className="w-full h-auto object-cover"
         />
@@ -823,7 +825,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
   {/* Left Image (on desktop), goes below on mobile */}
   <div className="flex-1 max-w-lg">
     <img
-      src="/assets/dyphostel/nearby-hostels-dyp.png"
+      src={room}
       alt="Hostels near DYP"
       className="w-full h-72 object-cover rounded-lg shadow-xl"
     />
@@ -938,7 +940,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     {/* subtle cyan glow */}
     <div className="absolute inset-0 -z-10 rounded-xl bg-cyan-400/10 blur-2xl" />
     <img
-     src="/assets/books/ND.jpg"   // put your guide image here
+     src={ND}   // put your guide image here
       alt="Become a Guide"
       className="w-full h-auto rounded-xl shadow-2xl"
     />

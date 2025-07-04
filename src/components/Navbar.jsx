@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { useDispatch } from 'react-redux';
+// import { logout } from "../../services/operations/authAPI";
+
+import {logoutauth} from "../services/operations/authAPI"
 import {
   FaHome,
   FaUniversity,
@@ -16,16 +21,20 @@ import { Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate=useNavigate();
+const dispatch=useDispatch();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const token = useSelector((state) => state.auth.token);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const navigate=useNavigate();
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleLogin = () => {
-  navigate('/login')
+  const handlelogout = () => {
+        dispatch(logoutauth(navigate));
     setIsMobileMenuOpen(false);
   };
 
@@ -63,7 +72,7 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar */}
-      <nav className="bg-slate-900/95 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
+      <nav className="bg-richblack-800 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -73,47 +82,50 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden custom-lg:flex items-center space-x-8">
-              {menuItems.map((item) => (
-                <a
-                  key={item.name}
-                  href="#"
-                  className="text-gray-300 hover:text-yellow-400 font-medium transition-all duration-300 relative group"
-                >
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-                </a>
-              ))}
-            </div>
+        <div className="hidden custom-lg:flex items-center space-x-8">
+  {menuItems.map((item) => (
+    <Link
+      key={item.name}
+      to={item.path}
+      className="text-gray-300 hover:text-yellow-400 font-medium transition-all duration-300 relative group"
+    >
+      {item.name}
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
+    </Link>
+  ))}
+</div>
+
 
             {/* Auth Buttons */}
             <div className="hidden custom-lg:flex items-center space-x-4">
-              {isLoggedIn ? (
+              {token ? (
                 <button
-                  onClick={handleLogin}
+                  onClick={handlelogout}
                   className="text-gray-300 hover:text-yellow-400 font-medium transition-colors"
                 >
                   Log out
                 </button>
               ) : (
                 <>
-                  <button
-                    onClick={handleLogin}
-                    className="text-gray-300 hover:text-yellow-400 font-medium transition-colors"
-                  >
+                     <Link to="/login">
+                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
                     Log in
                   </button>
-                  <Link
-                    to="/signup"
-                    className="bg-gray-700 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-600 transition-colors"
-                  >
+                </Link>
+
+                     <Link to="/signup">
+                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
                     Sign up
-                  </Link>
+                  </button>
+                </Link>
 
                 </>
               )}
             </div>
 
+
+
+  
             {/* Mobile Button */}
             <button onClick={toggleMobileMenu} className="custom-lg:hidden text-gray-300 hover:text-yellow-400">
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -160,9 +172,9 @@ const Navbar = () => {
   ))}
             {/* Auth for Mobile */}
             <div className="flex flex-col px-1 py-4 text-richblack-100 border-t border-slate-700">
-              {isLoggedIn ? (
+              {token ? (
                 <button
-                  onClick={handleLogin}
+                  onClick={handlelogout}
                   className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200"
                 >
                   <FaSignInAlt className="text-xl" />

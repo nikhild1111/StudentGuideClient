@@ -13,6 +13,7 @@
     "@fontsource/inter": "^5.2.6",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.10.0",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.525.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
