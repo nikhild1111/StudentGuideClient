@@ -72,7 +72,7 @@ const dispatch=useDispatch();
   return (
     <>
       {/* Navbar */}
-      <nav className="bg-richblack-800 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
+      <nav className="bg-richblack-900 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
