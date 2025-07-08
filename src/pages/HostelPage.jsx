@@ -933,11 +933,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHostels } from '../services/operations/hostelAPI';
-import SearchFilter from './SearchFilter';
-import HostelCard from './HostelCard';
-import Pagination from './Pagination';
-import ErrorMessage from './ErrorMessage';
-import NoResults from './NoResults';
+import SearchFilter from '../components/HostelHandles/Search';
+import HostelCard from '../components/HostelHandles/HostelCard';
+import Pagination from '../components/HostelHandles/Paganation';
+import ErrorMessage from '../components/HostelHandles/Error';
+import NoResults from '../components/HostelHandles/Noresult';
 
 const HostelPage = () => {
   const dispatch = useDispatch();
@@ -1110,14 +1110,14 @@ const HostelPage = () => {
       </div>
 
       {/* User Type Toggle (for demo/testing) */}
-      <div className="fixed bottom-4 right-4">
+      {/* <div className="fixed bottom-4 right-4">
         <button
           onClick={() => setUserType(userType === 'user' ? 'admin' : 'user')}
           className="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium shadow-lg hover:bg-yellow-500 transition-colors"
         >
           {userType === 'user' ? 'Switch to Admin' : 'Switch to User'}
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
