@@ -1,64 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
+import { 
+  fetchHostels, 
+  createHostel, 
+  updateHostel, 
+  deleteHostel 
+} from '../../services/operations/hostelAPI';
+
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Checkbox,
-  ListItemText,
-  Pagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
-  CircularProgress,
-  Snackbar,
-  Alert,
-  Chip
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
-import FilterIcon from '@mui/icons-material/FilterAlt';
+  ChevronLeft, ChevronRight, MapPin, Phone, Wifi, Shield, Zap,
+  UtensilsCrossed, Shirt, Bath, Droplets, Search, Star, Filter, Loader2
+} from 'lucide-react';
+const HostelAdminPanel = () => {
+  const dispatch = useDispatch();
+  const { hostels, loading, pagination,error } = useSelector(state => state.hostel);
 
-const HostelManagement = () => {
-  const navigate = useNavigate();
-  const [hostels, setHostels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [openDialog, setOpenDialog] = useState(false);
-  const [currentHostel, setCurrentHostel] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 6,
-    total: 0,
-    totalPages: 1
-  });
-  const [filters, setFilters] = useState({
-    search: '',
-    type: 'all'
-  });
+    const [searchTerm, setSearchTerm] = useState('');
+    const [genderFilter, setGenderFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState('create'); // 'create' or 'edit'
 
-  // Form state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+    const [showFilters, setShowFilters] = useState(false);
+    const [selectedHostel, setSelectedHostel] = useState(null);
+
+  const hostelsPerPage = 6;
   const [formData, setFormData] = useState({
     name: '',
     type: 'boys',
     rent: '',
-    rating: 0,
+    rating: '',
     images: [],
     video: '',
     services: [],
@@ -73,83 +47,85 @@ const HostelManagement = () => {
   });
 
   const serviceOptions = [
-    'wifi',
-    'security',
-    'electricity',
-    'food',
-    'washing',
-    'washroom',
-    'personal_toilet',
-    'water_filter'
+    'wifi', 'security', 'electricity', 'food', 
+    'washing', 'washroom', 'personal_toilet', 'water_filter'
   ];
 
-  // Fetch hostels with pagination and filters
-  const fetchHostels = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post('/api/hostels/fetch', {
-        page: pagination.page,
-        limit: pagination.limit,
-        search: filters.search,
-        type: filters.type
-      });
-      setHostels(response.data.data);
-      setPagination(prev => ({
-        ...prev,
-        total: response.data.pagination.total,
-        totalPages: response.data.pagination.totalPages
+  // Load hostels on component mount and when filters change
+  useEffect(() => {
+   if (currentPage > 1) {
+       dispatch(fetchHostels({ page: currentPage, limit: hostelsPerPage, search: searchTerm, type: genderFilter }));
+     }
+  }, [dispatch, currentPage]);
+
+
+  
+  useEffect(() => {
+     setCurrentPage(1);
+   dispatch(fetchHostels({ page: 1, limit: hostelsPerPage, search: searchTerm, type: genderFilter }));
+   
+  }, [genderFilter]);
+
+  // Handle search
+
+
+  const resetFiltersThenSearch = () => {
+   setSearchTerm('');
+      setGenderFilter('all');
+      setCurrentPage(1);
+      dispatch(fetchHostels({
+        page: 1,
+        limit: hostelsPerPage,
+        search: '',
+        type: 'all',
       }));
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch hostels');
-    } finally {
-      setLoading(false);
+  };
+ 
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  useEffect(() => {
-    fetchHostels();
-  }, [pagination.page, filters]);
-
-  const handlePageChange = (event, value) => {
-    setPagination(prev => ({ ...prev, page: value }));
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
-    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page when filters change
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddressChange = (e) => {
-    const { name, value } = e.target;
+  // Handle service selection
+  const handleServiceChange = (service) => {
     setFormData(prev => ({
       ...prev,
-      address: { ...prev.address, [name]: value }
+      services: prev.services.includes(service)
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service]
     }));
   };
 
-  const handleServicesChange = (event) => {
-    const { value } = event.target;
-    setFormData(prev => ({ ...prev, services: value }));
+  // Handle file uploads
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (name === 'images') {
+      setFormData(prev => ({ ...prev, images: Array.from(files) }));
+    } else if (name === 'video') {
+      setFormData(prev => ({ ...prev, video: files[0] }));
+    }
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map(file => URL.createObjectURL(file));
-    setFormData(prev => ({ ...prev, images: [...prev.images, ...imageUrls] }));
-  };
-
+  // Reset form
   const resetForm = () => {
     setFormData({
       name: '',
       type: 'boys',
       rent: '',
-      rating: 0,
+      rating: '',
       images: [],
       video: '',
       services: [],
@@ -162,427 +138,639 @@ const HostelManagement = () => {
       contact: '',
       description: ''
     });
-    setIsEditMode(false);
-    setCurrentHostel(null);
   };
 
-  const handleOpenDialog = (hostel = null) => {
-    if (hostel) {
-      setFormData({
-        name: hostel.name,
-        type: hostel.type,
-        rent: hostel.rent,
-        rating: hostel.rating,
-        images: hostel.images,
-        video: hostel.video,
-        services: hostel.services,
-        address: hostel.address,
-        contact: hostel.contact,
-        description: hostel.description
-      });
-      setIsEditMode(true);
-      setCurrentHostel(hostel);
-    } else {
-      resetForm();
-    }
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  // Open create modal
+  const handleCreate = () => {
+    setModalType('create');
     resetForm();
+    setShowModal(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const data = {
-        ...formData,
-        address: JSON.stringify(formData.address)
-      };
+  // Open edit modal
+  const handleEdit = (hostel) => {
+    setModalType('edit');
+    setSelectedHostel(hostel);
+    setFormData({
+      name: hostel.name,
+      type: hostel.type,
+      rent: hostel.rent,
+      rating: hostel.rating,
+      images: [],
+      video: '',
+      services: hostel.services,
+      address: hostel.address,
+      contact: hostel.contact,
+      description: hostel.description
+    });
+    setShowModal(true);
+  };
 
-      if (isEditMode) {
-        await axios.put(`/api/hostels/update/${currentHostel._id}`, data);
-        setSuccess('Hostel updated successfully');
-      } else {
-        await axios.post('/api/hostels/create', data);
-        setSuccess('Hostel created successfully');
-      }
-      fetchHostels();
-      handleCloseDialog();
-    } catch (err) {
-      setError(err.response?.data?.message || 'Operation failed');
-    } finally {
-      setLoading(false);
+
+  let totalPages=0;
+let total =0;
+if(pagination){
+ totalPages= pagination.totalPages;
+total= pagination.total;
+}
+  // Handle form submit
+  const handleSubmit = () => {
+    // Basic validation
+    if (!formData.name || !formData.type || !formData.rent || !formData.address.full || !formData.contact) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    const submitData = new FormData();
+    
+    // Append basic fields
+    submitData.append('name', formData.name);
+    submitData.append('type', formData.type);
+    submitData.append('rent', formData.rent);
+    submitData.append('rating', formData.rating);
+    submitData.append('contact', formData.contact);
+    submitData.append('description', formData.description);
+    
+    // Append address as JSON
+    submitData.append('address', JSON.stringify(formData.address));
+    
+    // Append services as JSON
+    submitData.append('services', JSON.stringify(formData.services));
+    
+    // Append files
+    formData.images.forEach(image => {
+      submitData.append('images', image);
+    });
+    
+    if (formData.video) {
+      submitData.append('video', formData.video);
+    }
+
+    const callback = () => {
+      setShowModal(false);
+    dispatch(fetchHostels({ page: currentPage, limit: hostelsPerPage, search: searchTerm, type: genderFilter }));
+    };
+
+    if (modalType === 'create') {
+      dispatch(createHostel(submitData, callback));
+    } else {
+      dispatch(updateHostel(selectedHostel._id, submitData, callback));
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this hostel?')) {
-      try {
-        setLoading(true);
-        await axios.delete(`/api/hostels/delete/${id}`);
-        setSuccess('Hostel deleted successfully');
-        fetchHostels();
-      } catch (err) {
-        setError(err.response?.data?.message || 'Deletion failed');
-      } finally {
-        setLoading(false);
-      }
-    }
+  // Handle delete
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
   };
 
-  const handleCloseSnackbar = () => {
-    setError('');
-    setSuccess('');
+  const confirmDelete = () => {
+    dispatch(deleteHostel(deleteId, () => {
+      setShowDeleteModal(false);
+     dispatch(fetchHostels({ page: currentPage, limit: hostelsPerPage, search: searchTerm, type: genderFilter }));
+    }));
   };
+
+  // Pagination
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Get totals for stats
+  const getTotalsByType = () => {
+    const boysCount = hostels.filter(h => h.type === 'boys').length;
+    const girlsCount = hostels.filter(h => h.type === 'girls').length;
+    return { total: hostels.length, boys: boysCount, girls: girlsCount };
+  };
+
+  const stats = getTotalsByType();
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-        Hostel Management
-      </Typography>
+    <div className="min-h-screen bg-gray-900 p-4 md:p-6 text-white">
+      {/* Header */}
+       <div className="bg-gray-900 p-4 md:p-6 border-b border-gray-800">
+             <div className="max-w-7xl mx-auto">
+               <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
+                 Welcome to <span className="text-yellow-400">hostel  Manegment</span>
+               </h1>
+               
+               {/* Search and Filter */}
+               <div className="flex flex-row gap-4 items-center">
+                 <div className="flex-1 relative">
+                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                   <input
+                     type="text"
+                     placeholder="Search hostels by name or location..."
+                     className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                     value={searchTerm}
+                     onChange={(e) => setSearchTerm(e.target.value)}
+      onKeyDown={(e) => {
+         if (e.key === 'Enter' && searchTerm.trim() !== '') {
+           setCurrentPage(1);
+           dispatch(fetchHostels({
+             page: 1,
+             limit: hostelsPerPage,
+             search: searchTerm,
+             type: genderFilter,
+           }));
+           setSearchTerm('');
+         }
+       }}
+     
+     
+                   />
+                 </div>
+                 
+                 <div className="flex gap-2">
+                   <button
+                     onClick={() => setShowFilters(!showFilters)}
+                     className="flex items-center gap-2 px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors"
+                   >
+                     <Filter className="w-5 h-5" />
+                     <span className="hidden sm:inline">Filters</span>
+                   </button>
+                 </div>
+               </div>
+               
+               {/* Gender Filter */}
+               {showFilters && (
+                 <div className="mt-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
+                   <h3 className="text-lg font-medium mb-3">Filter by Gender</h3>
+                   <div className="flex gap-2">
+                     {[
+                       { value: 'all', label: 'All' },
+                       { value: 'boys', label: 'Boys Only' },
+                       { value: 'girls', label: 'Girls Only' }
+                     ].map(filter => (
+                       <button
+                         key={filter.value}
+                         onClick={() => setGenderFilter(filter.value)}
+                         className={`px-3 py-2 rounded-lg transition-colors ${
+                           genderFilter === filter.value
+                             ? 'bg-yellow-400 text-gray-900'
+                             : 'bg-gray-600 hover:bg-gray-500'
+                         }`}
+                       >
+                         {filter.label}
+                       </button>
+     
+     
+                     ))}
+     
+                     <button
+       onClick={resetFiltersThenSearch}
+       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+     >
+       Reset 
+     </button>
+     
+                   </div>
+                 </div>
+               )}
+               
+               {/* Results count */}
+               <div className="mt-4 text-sm text-gray-400">
+                 {loading ? (
+                   <div className="flex items-center gap-2">
+                     <Loader2 className="w-4 h-4 animate-spin" />
+                     <span>Searching...</span>
+                   </div>
+                 ) : (
+                   <span>Showing {hostels.length} of {total} hostels</span>
+                 )}
+               </div>
+             </div>
+           </div>
+     
+           {/* Error Message */}
+           {error && (
+             <div className="max-w-7xl mx-auto p-4">
+               <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
+                 {error}
+               </div>
+             </div>
+           )}
+     
 
-      {/* Filters and Search */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Search hostels..."
-                name="search"
-                value={filters.search}
-                onChange={handleFilterChange}
-                InputProps={{
-                  startAdornment: <SearchIcon color="action" />
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth>
-                <InputLabel>Type</InputLabel>
-                <Select
-                  name="type"
-                  value={filters.type}
-                  onChange={handleFilterChange}
-                  label="Type"
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="boys">Boys</MenuItem>
-                  <MenuItem value="girls">Girls</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                startIcon={<AddIcon />}
-                onClick={() => handleOpenDialog()}
-              >
-                Add Hostel
-              </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 max-w-7xl mx-auto md:grid-cols-3 gap-6 mb-6">
+        <div className="bg-gray-800 border  border-gray-600 rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Total Hostels</p>
+              <p className="text-2xl font-bold text-white">{pagination?.total || 0}</p>
+            </div>
+            <div className="bg-blue-100 p-3 rounded-full">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10" />
+              </svg>
+            </div>
+          </div>
+        </div>
 
-      {/* Hostels List */}
-      {loading && hostels.length === 0 ? (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
-        </Box>
-      ) : hostels.length === 0 ? (
-        <Card>
-          <CardContent>
-            <Typography align="center" color="textSecondary">
-              No hostels found. Add a new hostel to get started.
-            </Typography>
-          </CardContent>
-        </Card>
+        <div className="bg-gray-800 border  border-gray-600 rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Boys Hostels</p>
+              <p className="text-2xl font-bold text-white">{stats.boys}</p>
+            </div>
+            <div className="bg-blue-100 p-3 rounded-full">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-800 border  border-gray-600 rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Girls Hostels</p>
+              <p className="text-2xl font-bold text-white">{stats.girls}</p>
+            </div>
+            <div className="bg-pink-100 p-3 rounded-full">
+              <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      Hostels Grid
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
       ) : (
-        <>
-          <Grid container spacing={3}>
-            {hostels.map((hostel) => (
-              <Grid item xs={12} sm={6} md={4} key={hostel._id}>
-                <Card>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="h6" gutterBottom>
-                        {hostel.name}
-                      </Typography>
-                      <Chip
-                        label={hostel.type}
-                        color={hostel.type === 'boys' ? 'primary' : 'secondary'}
-                        size="small"
-                      />
-                    </Box>
-                    <Typography variant="body2" color="textSecondary" gutterBottom>
-                      {hostel.address.full}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      ₹{hostel.rent}/month
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                      {hostel.services.map((service) => (
-                        <Chip key={service} label={service} size="small" />
-                      ))}
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Button
-                        size="small"
-                        startIcon={<EditIcon />}
-                        onClick={() => handleOpenDialog(hostel)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="small"
-                        startIcon={<DeleteIcon />}
-                        color="error"
-                        onClick={() => handleDelete(hostel._id)}
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination
-                count={pagination.totalPages}
-                page={pagination.page}
-                onChange={handlePageChange}
-                color="primary"
-                shape="rounded"
-              />
-            </Box>
-          )}
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          {hostels.map(hostel => (
+            <div key={hostel._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-gray-200 relative">
+                {hostel.images && hostel.images.length > 0 ? (
+                  <img 
+                    src={hostel.images[0]} 
+                    alt={hostel.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-gray-500">No Image</span>
+                  </div>
+                )}
+                <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold ${
+                  hostel.type === 'boys' ? 'bg-blue-500 text-white' : 'bg-pink-500 text-white'
+                }`}>
+                  {hostel.type}
+                </div>
+              </div>
+              
+              <div className="p-4">
+                <h3 className="font-bold text-lg text-gray-900 mb-2">{hostel.name}</h3>
+                <p className="text-gray-600 text-sm mb-2">{hostel.address.full}</p>
+                <div className="flex items-center mb-2">
+                  <span className="text-yellow-500">★</span>
+                  <span className="text-sm text-gray-600 ml-1">{hostel.rating || 0}</span>
+                </div>
+                <p className="text-xl font-bold text-gray-900 mb-4">₹{hostel.rent}/month</p>
+                
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(hostel)}
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(hostel._id)}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {isEditMode ? 'Edit Hostel' : 'Add New Hostel'}
-        </DialogTitle>
-        <DialogContent dividers>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Hostel Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth margin="normal">
-                  <InputLabel>Type</InputLabel>
-                  <Select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    label="Type"
-                    required
-                  >
-                    <MenuItem value="boys">Boys</MenuItem>
-                    <MenuItem value="girls">Girls</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Monthly Rent (₹)"
-                  name="rent"
-                  type="number"
-                  value={formData.rent}
-                  onChange={handleInputChange}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Rating (0-5)"
-                  name="rating"
-                  type="number"
-                  value={formData.rating}
-                  onChange={handleInputChange}
-                  inputProps={{ min: 0, max: 5 }}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Full Address"
-                  name="full"
-                  value={formData.address.full}
-                  onChange={handleAddressChange}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Landmark"
-                  name="landmark"
-                  value={formData.address.landmark}
-                  onChange={handleAddressChange}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Gully/Street"
-                  name="gully"
-                  value={formData.address.gully}
-                  onChange={handleAddressChange}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Building Name/No."
-                  name="building"
-                  value={formData.address.building}
-                  onChange={handleAddressChange}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Contact Number"
-                  name="contact"
-                  value={formData.contact}
-                  onChange={handleInputChange}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth margin="normal">
-                  <InputLabel>Services</InputLabel>
-                  <Select
-                    multiple
-                    name="services"
-                    value={formData.services}
-                    onChange={handleServicesChange}
-                    renderValue={(selected) => selected.join(', ')}
-                  >
-                    {serviceOptions.map((service) => (
-                      <MenuItem key={service} value={service}>
-                        <Checkbox checked={formData.services.indexOf(service) > -1} />
-                        <ListItemText primary={service} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Video URL (optional)"
-                  name="video"
-                  value={formData.video}
-                  onChange={handleInputChange}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  multiline
-                  rows={3}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <input
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  id="hostel-images"
-                  type="file"
-                  multiple
-                  onChange={handleImageUpload}
-                />
-                <label htmlFor="hostel-images">
-                  <Button variant="outlined" component="span" startIcon={<AddIcon />}>
-                    Upload Images
-                  </Button>
-                </label>
-                {formData.images.length > 0 && (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
-                    {formData.images.map((img, index) => (
-                      <Box
-                        key={index}
-                        component="img"
-                        src={img}
-                        alt={`Hostel ${index + 1}`}
-                        sx={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 1 }}
-                      />
-                    ))}
-                  </Box>
-                )}
-              </Grid>
-            </Grid>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained" disabled={loading}>
-            {loading ? <CircularProgress size={24} /> : isEditMode ? 'Update' : 'Create'}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
-      {/* Snackbars for feedback */}
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert onClose={handleCloseSnackbar} severity="error">
-          {error}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={!!success}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert onClose={handleCloseSnackbar} severity="success">
-          {success}
-        </Alert>
-      </Snackbar>
-    </Container>
+
+
+
+
+
+      {/* Pagination */}
+  {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-8 gap-2">
+            <button
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="flex items-center gap-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 rounded-lg transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </button>
+            
+            <div className="flex gap-1">
+              {[...Array(totalPages)].map((_, index) => {
+                const pageNumber = index + 1;
+                const isCurrentPage = pageNumber === currentPage;
+                
+                // Show first page, last page, current page, and pages around current
+                if (
+                  pageNumber === 1 ||
+                  pageNumber === totalPages ||
+                  (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                        isCurrentPage
+                          ? 'bg-yellow-400 text-gray-900'
+                          : 'bg-gray-700 hover:bg-gray-600 text-white'
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                }
+                
+                // Show ellipsis
+                if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
+                  return (
+                    <span key={pageNumber} className="w-10 h-10 flex items-center justify-center text-gray-400">
+                      ...
+                    </span>
+                  );
+                }
+                
+                return null;
+              })}
+            </div>
+            
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="flex items-center gap-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 rounded-lg transition-colors"
+            >
+              Next
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+
+      {/* Create/Edit Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">
+                  {modalType === 'create' ? 'Create New Hostel' : 'Edit Hostel'}
+                </h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Type *
+                    </label>
+                    <select
+                      name="type"
+                      value={formData.type}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="boys">Boys</option>
+                      <option value="girls">Girls</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Rent *
+                    </label>
+                    <input
+                      type="number"
+                      name="rent"
+                      value={formData.rent}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Rating
+                    </label>
+                    <input
+                      type="number"
+                      name="rating"
+                      value={formData.rating}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Contact *
+                    </label>
+                    <input
+                      type="text"
+                      name="contact"
+                      value={formData.contact}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Images
+                    </label>
+                    <input
+                      type="file"
+                      name="images"
+                      onChange={handleFileChange}
+                      multiple
+                      accept="image/*"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Address *
+                  </label>
+                  <input
+                    type="text"
+                    name="address.full"
+                    value={formData.address.full}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Landmark
+                    </label>
+                    <input
+                      type="text"
+                      name="address.landmark"
+                      value={formData.address.landmark}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Gully
+                    </label>
+                    <input
+                      type="text"
+                      name="address.gully"
+                      value={formData.address.gully}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Building
+                    </label>
+                    <input
+                      type="text"
+                      name="address.building"
+                      value={formData.address.building}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Services
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {serviceOptions.map(service => (
+                      <label key={service} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.services.includes(service)}
+                          onChange={() => handleServiceChange(service)}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm capitalize">{service.replace('_', ' ')}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {loading ? 'Saving...' : modalType === 'create' ? 'Create' : 'Update'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Confirm Delete
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this hostel? This action cannot be undone.
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default HostelManagement;
+export default HostelAdminPanel;
