@@ -3,6 +3,8 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ correct
 import { toast } from "react-hot-toast";
+
+
 import {
   setLoading,
   setToken,
@@ -11,9 +13,9 @@ import {
   logout
 } from "../../slices/authSlices";
 import { clearCart } from "../../slices/CartSlice";
+ const Backend_url = import.meta.env.VITE_BACKEND_URL;
 
-
-const BASE_URL = "http://localhost:4000/api/v1/auth"
+const BASE_URL = `${Backend_url}/api/v1/auth`
 
 // ✅ SEND OTP
 export function sendOtp(formData, navigate) {

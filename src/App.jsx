@@ -15,6 +15,8 @@ import MentorPage from './pages/MentorPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import VerifyEmail from './pages/VerifyEmail';
+import Admin from "../src/pages/Admin";
+import Hos from "../src/components/Admin/Hostels";
 import { useEffect } from 'react';
 function App() {
 
@@ -43,6 +45,8 @@ function App() {
           <Route path="/mentor" element={<MentorPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/hos" element={<Hos />} />
           <Route
             path="verify-email"
             element={

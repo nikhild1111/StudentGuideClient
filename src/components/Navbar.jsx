@@ -47,6 +47,7 @@ const dispatch=useDispatch();
   { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
   { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
   { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
+  { name: 'Admin', icon: <FaUserFriends />, path: '/admin' },
 ];
 
 
