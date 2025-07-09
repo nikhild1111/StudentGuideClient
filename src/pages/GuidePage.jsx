@@ -926,7 +926,121 @@
 
 
 
-// GuidePage.jsx
+// // GuidePage.jsx
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import { Search, Filter } from "lucide-react";
+// import { fetchAllGuideApplicants } from "../services/operations/guideAPI";
+// import Pagination from '../components/Guide/Pagination';
+// import SearchBar from '../components/Guide/SearchBar';
+// import FilterPanel from '../components/Guide/FilterPanel';
+// import GuideCard from '../components/Guide//GuideCard';
+
+// const GuidePage = () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+
+//   const [filters, setFilters] = useState({});
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [showFilters, setShowFilters] = useState(false);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [guidesPerPage] = useState(12);
+
+//   const { guides, loading } = useSelector((state) => state.guide);
+//   useEffect(() => {
+//   console.log("Guides from Redux:", guides);
+// }, [guides]);
+
+
+//   useEffect(() => {
+//     const payload = { ...filters };
+//     if (searchTerm) payload.search = searchTerm;
+//     dispatch(fetchAllGuideApplicants(payload));
+//   }, [filters, searchTerm, dispatch]);
+
+//   const handlePageChange = (page) => {
+//     setCurrentPage(page);
+//   };
+
+//   const startIndex = (currentPage - 1) * guidesPerPage;
+//   const currentGuides = guides.slice(startIndex, startIndex + guidesPerPage);
+//   const totalPages = Math.ceil(guides.length / guidesPerPage);
+
+//   return (
+//     <div className="min-h-screen bg-gray-900 text-white">
+//       <div className="container mx-auto px-4 py-8">
+//         <div className="text-center mb-8">
+//           <h1 className="text-4xl font-bold mb-4">
+//             Find Your Perfect <span className="text-yellow-400">Guide</span>
+//           </h1>
+//           <p className="text-gray-300 text-lg">
+//             Connect with experienced seniors and guides for your academic journey
+//           </p>
+//         </div>
+
+//         <div className="flex justify-center mb-8">
+//           <button
+//             onClick={() => navigate("/guideapplication")}
+//             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors"
+//           >
+//             Become a Guide
+//           </button>
+//         </div>
+
+//         <div className="mb-8 space-y-4">
+//           <div className="flex flex-col md:flex-row gap-4">
+//             <div className="flex-1">
+//               <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+//             </div>
+//             <button
+//               onClick={() => setShowFilters(!showFilters)}
+//               className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition-colors"
+//             >
+//               <Filter className="w-5 h-5" />
+//               Filters
+//             </button>
+//           </div>
+//           <FilterPanel filters={filters} onFiltersChange={setFilters} showFilters={showFilters} />
+//         </div>
+
+//         {loading ? (
+//           <div className="flex justify-center items-center py-20">
+//             <p className="text-gray-400 text-lg">Loading guides...</p>
+//           </div>
+//         ) : currentGuides.length > 0 ? (
+//           <>
+//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+//               {currentGuides.map((guide) => (
+//                 <GuideCard key={guide._id} guide={guide} />
+//               ))}
+//             </div>
+//             <Pagination
+//               currentPage={currentPage}
+//               totalPages={totalPages}
+//               onPageChange={handlePageChange}
+//             />
+//           </>
+//         ) : (
+//           <div className="text-center py-12">
+//             <p className="text-gray-400 text-lg">No guides found matching your criteria</p>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default GuidePage;
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -935,7 +1049,7 @@ import { fetchAllGuideApplicants } from "../services/operations/guideAPI";
 import Pagination from '../components/Guide/Pagination';
 import SearchBar from '../components/Guide/SearchBar';
 import FilterPanel from '../components/Guide/FilterPanel';
-import GuideCard from '../components/Guide//GuideCard';
+import GuideCard from '../components/Guide/GuideCard';
 
 const GuidePage = () => {
   const dispatch = useDispatch();
@@ -945,13 +1059,13 @@ const GuidePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [guidesPerPage] = useState(12);
+  const [guidesPerPage] = useState(16); // Increased from 12 to 16
 
   const { guides, loading } = useSelector((state) => state.guide);
+  
   useEffect(() => {
-  console.log("Guides from Redux:", guides);
-}, [guides]);
-
+    console.log("Guides from Redux:", guides);
+  }, [guides]);
 
   useEffect(() => {
     const payload = { ...filters };
@@ -969,17 +1083,19 @@ const GuidePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">
+      <div className="container mx-auto px-4 py-6">
+        {/* Header Section */}
+        <div className="text-center mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">
             Find Your Perfect <span className="text-yellow-400">Guide</span>
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-gray-300 text-base md:text-lg">
             Connect with experienced seniors and guides for your academic journey
           </p>
         </div>
 
-        <div className="flex justify-center mb-8">
+        {/* Become a Guide Button */}
+        <div className="flex justify-center mb-6">
           <button
             onClick={() => navigate("/guideapplication")}
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors"
@@ -988,14 +1104,15 @@ const GuidePage = () => {
           </button>
         </div>
 
-        <div className="mb-8 space-y-4">
+        {/* Search and Filter Section */}
+        <div className="mb-6 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition-colors"
             >
               <Filter className="w-5 h-5" />
               Filters
@@ -1004,17 +1121,27 @@ const GuidePage = () => {
           <FilterPanel filters={filters} onFiltersChange={setFilters} showFilters={showFilters} />
         </div>
 
+        {/* Content Section */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <p className="text-gray-400 text-lg">Loading guides...</p>
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+              <p className="text-gray-400 text-lg">Loading guides...</p>
+            </div>
           </div>
         ) : currentGuides.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            {/* Responsive Grid - Optimized for compact cards */}
+          
+                    <div className="max-w-7xl mx-auto p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> </div>
               {currentGuides.map((guide) => (
                 <GuideCard key={guide._id} guide={guide} />
               ))}
+             
             </div>
+            
+            {/* Pagination */}
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -1023,7 +1150,11 @@ const GuidePage = () => {
           </>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">No guides found matching your criteria</p>
+            <div className="text-gray-400">
+              <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p className="text-lg mb-2">No guides found matching your criteria</p>
+              <p className="text-sm">Try adjusting your search or filters</p>
+            </div>
           </div>
         )}
       </div>
