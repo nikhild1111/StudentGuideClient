@@ -574,11 +574,13 @@ import ND from '../assets/Images/ND.jpg';
 import bookshare from '../assets/Images/bookshare.png';
 import food from '../assets/Images/food.png';
 import room from '../assets/Images/room.png';
+import { useSelector } from 'react-redux';
 
 const LandingPage = () => {
 
  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
+    const token = useSelector((state) => state.auth.token);
 
 const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
   // Auto Slide
@@ -963,12 +965,26 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
 
   
 
-     <div className="mt-8 flex flex-row gap-7">
-            <CTAButton active={true} linkto={"/"}>
+   
+
+
+              {token ? (
+                          <div className="mt-8 flex flex-row gap-7">
+            <CTAButton active={true} linkto={"/guideapplication"}>
             Start Guiding Today
             </CTAButton>
          
           </div>
+                        ) : (
+                          <>
+                              <div className="mt-8 flex flex-row gap-7">
+            <CTAButton active={true} linkto={"/login"}>
+            Start Guiding Today
+            </CTAButton>
+          </div>
+          
+                  </>
+                        )}
   </div>
 </div>
 

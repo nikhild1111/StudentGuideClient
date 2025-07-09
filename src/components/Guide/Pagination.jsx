@@ -1,11 +1,9 @@
+
+// Pagination.jsx
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const Pagination = ({ 
-  currentPage, 
-  totalPages, 
-  onPageChange 
-}) => {
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   const handlePageChange = (page) => {
@@ -23,13 +21,12 @@ const Pagination = ({
         <ChevronLeft className="w-4 h-4" />
         Previous
       </button>
-      
+
       <div className="flex gap-1">
         {[...Array(totalPages)].map((_, index) => {
           const pageNumber = index + 1;
           const isCurrentPage = pageNumber === currentPage;
-          
-          // Show first page, last page, current page, and pages around current
+
           if (
             pageNumber === 1 ||
             pageNumber === totalPages ||
@@ -49,8 +46,7 @@ const Pagination = ({
               </button>
             );
           }
-          
-          // Show ellipsis
+
           if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
             return (
               <span key={pageNumber} className="w-10 h-10 flex items-center justify-center text-gray-400">
@@ -58,11 +54,11 @@ const Pagination = ({
               </span>
             );
           }
-          
+
           return null;
         })}
       </div>
-      
+
       <button
         onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
@@ -76,8 +72,3 @@ const Pagination = ({
 };
 
 export default Pagination;
-
-
-
-
-
