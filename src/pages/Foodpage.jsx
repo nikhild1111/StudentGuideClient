@@ -385,7 +385,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, MapPin, Phone, Star, ChevronLeft, ChevronRight, Utensils, Menu } from 'lucide-react';
 import axios from 'axios';
-const HotelComponent = () => {
+const FoodPage = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -724,4 +724,4 @@ const fetchHotels = async (page = 1, search = '', type = 'all') => {
   );
 };
 
-export default HotelComponent;
+export default FoodPage;
