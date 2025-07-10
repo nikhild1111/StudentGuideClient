@@ -77,10 +77,12 @@ const dispatch=useDispatch();
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
-              <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
-            </div>
+       <div className="flex items-center space-x-3">
+  <Link to="/home" className="flex items-center space-x-3">
+    <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
+    <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
+  </Link>
+</div>
 
             {/* Desktop Menu */}
         <div className="hidden custom-lg:flex items-center space-x-8">

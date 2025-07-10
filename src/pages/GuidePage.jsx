@@ -1055,7 +1055,11 @@ const GuidePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({ // Default to showing guides
+    department: '',
+    year: '',
+    gender: ''
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -1075,6 +1079,16 @@ const GuidePage = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+   const handleResetFilters = () => {
+    setFilters({
+      department: '',
+      year: '',
+      gender: ''
+    });
+    setSearchTerm('');
+    setCurrentPage(1);
   };
 
   const startIndex = (currentPage - 1) * guidesPerPage;
@@ -1106,7 +1120,7 @@ const GuidePage = () => {
 
         {/* Search and Filter Section */}
         <div className="mb-6 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-row md:flex-row gap-4">
             <div className="flex-1">
               <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             </div>
@@ -1118,7 +1132,7 @@ const GuidePage = () => {
               Filters
             </button>
           </div>
-          <FilterPanel filters={filters} onFiltersChange={setFilters} showFilters={showFilters} />
+          <FilterPanel filters={filters} onFiltersChange={setFilters} showFilters={showFilters}  onReset={handleResetFilters}/>
         </div>
 
         {/* Content Section */}
@@ -1133,13 +1147,12 @@ const GuidePage = () => {
           <>
             {/* Responsive Grid - Optimized for compact cards */}
           
-                    <div className="max-w-7xl mx-auto p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> </div>
-              {currentGuides.map((guide) => (
-                <GuideCard key={guide._id} guide={guide} />
-              ))}
-             
-            </div>
+<div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-900">
+  {currentGuides.map((guide) => (
+    <GuideCard key={guide._id} guide={guide} />
+  ))}
+</div>
+
             
             {/* Pagination */}
             <Pagination

@@ -591,6 +591,15 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     return () => clearInterval(timer);
   }, []);
 
+
+ const buttonRoutes = {
+    Admission: "/admission",
+    Food: "/food",
+    Books: "/books",
+    Hostels: "/hostels",
+    Mentors: "/mentor",
+  };
+
   return (
     <div className="bg-richblack-900 min-h-screen w-full overflow-x-hidden">
 
@@ -801,11 +810,11 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
         Discover hygienic and budget-friendly messes near DYPCOE. Choose from veg, non-veg, or Jain options with reviews and meal photos. Connect with tiffin providers and manage subscriptions easily on Student Guide.
       </p>
  <div className="mt-8 flex flex-row gap-7">
-            <CTAButton active={true} linkto={"/"}>
-             Find Mess Near You
+            <CTAButton active={true} linkto={"/food"}>
+             Find Tiffin Near You
             </CTAButton>
-            <CTAButton active={false} linkto={"/"}>
-              Become a Provider
+            <CTAButton active={false} linkto={"/mentor"}>
+             Talk to Seniors
             </CTAButton>
           </div>
 
@@ -843,10 +852,10 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     </p>
 
  <div className="mt-8 flex flex-row gap-7">
-            <CTAButton active={true} linkto={"/"}>
+            <CTAButton active={true} linkto={"/hostels"}>
              Explore Hostels
             </CTAButton>
-            <CTAButton active={false} linkto={"/"}>
+            <CTAButton active={false} linkto={"/mentor"}>
             Talk to Seniors
             </CTAButton>
           </div>
@@ -873,9 +882,10 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
 
     {/* Tabs */}
     <div className="mt-10 bg-richblack-800/60 backdrop-blur-md shadow-[0_0_40px_-5px_rgba(0,0,0,0.7)] flex flex-wrap justify-center gap-3 sm:gap-6 px-4 py-3 rounded-full w-full max-w-4xl mx-auto">
-      {["Admission", "Food", "Books", "Hostels", "Mentors"].map((label, idx) => (
+      {Object.keys(buttonRoutes).map((label, idx) => (
         <button
           key={idx}
+          onClick={() => navigate(buttonRoutes[label])}
           className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
             idx === 0
               ? "bg-richblack-900 text-white border border-yellow-400"

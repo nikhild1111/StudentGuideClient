@@ -139,70 +139,86 @@
 
 
 import React from 'react';
-import { MapPin, Star, User, GraduationCap, Phone, DollarSign } from 'lucide-react';
-
+import { MapPin, Star, User, GraduationCap, Phone } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 const GuideCard = ({ guide }) => {
+    const navigate = useNavigate();
   const defaultImage = "https://via.placeholder.com/150x150?text=Guide";
   const imageUrl = guide.image?.startsWith("/uploads/")
     ? `${import.meta.env.VITE_BACKEND_URL}${guide.image}`
     : guide.image || defaultImage;
 
+  const handlePay = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // If not logged in, redirect to login
+      navigate("/login");
+      return;
+    }
+
+    // Proceed with payment logic
+   toast.success("Payment Successful");
+    // Add your payment logic here
+  };
+
+
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-yellow-500/20 transition-all duration-300 border border-gray-700 hover:border-yellow-500/50 max-w-7xl mx-auto mb-[25px]">
-      {/* Profile Image Section */}
-      <div className="relative p-4 pb-2">
-        <div className="relative w-full h-40 mx-auto">
-          <img
-            src={imageUrl}
-            alt={guide.name}
-            className="w-full h-full object-contain rounded-lg"
-          />
-          <span className="absolute top-2 right-2 bg-yellow-400 text-gray-900 px-2 py-1 rounded text-xs font-semibold">
-            {guide.role || "Guide"}
-          </span>
-        </div>
+    <div className="bg-[#1A1B1F] border border-gray-400 rounded-xl shadow-md hover:shadow-yellow-400/20 transition-all duration-300 mb-6">
+      
+      {/* Image and Role Tag */}
+      <div className="relative w-full h-[220px] overflow-hidden rounded-t-xl bg-black">
+        <img
+          src={imageUrl}
+          alt={guide.name}
+          className="w-full h-full object-contain object-top"
+        />
+        <span className="absolute top-2 right-2 bg-yellow-400 text-gray-900 px-2 py-1 rounded text-xs font-semibold">
+          {guide.role || "Guide"}
+        </span>
       </div>
 
-      {/* Info Section */}
-      <div className="px-4 pb-4 space-y-3">
+      {/* Content */}
+      <div className="p-4 space-y-2 bg-gray-900">
         {/* Name */}
-        <h3 className="text-lg font-bold text-white text-center">{guide.name}</h3>
-        
-        {/* Department & Year */}
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-300">
+        <h3 className="text-center text-white font-bold text-lg">{guide.name}</h3>
+
+        {/* Department */}
+        <div className="flex items-center justify-center text-sm text-gray-300 gap-1">
           <GraduationCap className="w-4 h-4 text-yellow-400" />
           <span>{guide.department}</span>
         </div>
-        
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-300">
+
+        {/* Year */}
+        <div className="flex items-center justify-center text-sm text-gray-300 gap-1">
           <Star className="w-4 h-4 text-yellow-400" />
           <span>Year {guide.year}</span>
         </div>
 
-        {/* Location */}
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-300">
+        {/* City & State */}
+        <div className="flex items-center justify-center text-sm text-gray-300 gap-1">
           <MapPin className="w-4 h-4 text-yellow-400" />
-          <span>{guide.city}, {guide.state}</span>
+          {guide.taluka}, {guide.city}, {guide.state}, {guide.country}
         </div>
 
         {/* Gender */}
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-300">
+        <div className="flex items-center justify-center text-sm text-gray-300 gap-1">
           <User className="w-4 h-4 text-yellow-400" />
           <span>{guide.gender}</span>
         </div>
 
-        {/* Rate and Contact */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-700">
-          <div className="flex items-center gap-2">
-            <div className="bg-yellow-400 p-1.5 rounded-full">
-              {/* <span className="w-2 h-2 text-gray-900" >₹</span> */}
-            </div>
-            <div>
-              <div className="text-xs text-white">Pay</div>
-              <div className="text-sm font-bold text-yellow-400">₹{guide.pay}</div>
-            </div>
-          </div>
+        {/* Payment and Contact */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-700 mt-3">
+          {/* Pay Button */}
+          <button
+            onClick={handlePay}
+            className="text-sm font-semibold bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-300 transition"
+          >
+            Pay ₹{guide.pay}
+          </button>
 
+          {/* Contact */}
           <div className="flex items-center gap-2">
             <div className="bg-gray-700 p-1.5 rounded-full">
               <Phone className="w-3 h-3 text-yellow-400" />
@@ -217,6 +233,5 @@ const GuideCard = ({ guide }) => {
     </div>
   );
 };
-
 
 export default GuideCard;

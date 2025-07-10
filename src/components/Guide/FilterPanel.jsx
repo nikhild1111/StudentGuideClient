@@ -1,6 +1,6 @@
 import React from 'react';
-
-const FilterPanel = ({ filters, onFiltersChange, showFilters }) => {
+import { Search, Filter, Users, Star, MapPin, Calendar, User, Briefcase, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+const FilterPanel = ({ filters, onFiltersChange, showFilters,onReset }) => {
   if (!showFilters) return null;
 
   // Define only the required filter keys
@@ -39,6 +39,16 @@ const FilterPanel = ({ filters, onFiltersChange, showFilters }) => {
             </select>
           </div>
         ))}
+  <div className="flex items-end">
+          <button
+            onClick={onReset}
+            className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Reset Filters
+          </button>
+        </div>
+        
       </div>
     </div>
   );
