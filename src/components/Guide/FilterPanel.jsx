@@ -39,15 +39,15 @@ const FilterPanel = ({ filters, onFiltersChange, showFilters,onReset }) => {
             </select>
           </div>
         ))}
-  <div className="flex items-end">
+  {/* <div className="flex items-end">
           <button
             onClick={onReset}
             className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <RotateCcw className="w-4 h-4" />
             Reset Filters
-          </button>
-        </div>
+          </button> */}
+        {/* </div> */}
         
       </div>
     </div>

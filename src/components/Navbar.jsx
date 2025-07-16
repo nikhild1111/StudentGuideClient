@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from "react-redux";
-import { useDispatch } from 'react-redux';
+
 // import { logout } from "../../services/operations/authAPI";
+
+// import useUserRole from '../components/Commonhooks/UseUseRole'
+import { useSelector, useDispatch } from 'react-redux';
 
 import {logoutauth} from "../services/operations/authAPI"
 import {
@@ -23,6 +25,10 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const navigate=useNavigate();
 const dispatch=useDispatch();
+const user = useSelector((state) => state.auth.user);
+
+//  const { role, loading } = useUserRole();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
 
@@ -39,16 +45,31 @@ const dispatch=useDispatch();
   };
 
   const menuItems = [
-  { name: 'Home', icon: <FaHome />, path: '/home' },
-  { name: 'Admission', icon: <FaUniversity />, path: '/admission' },
-  { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
-  { name: 'Food', icon: <FaUtensils />, path: '/food' },
-  { name: 'Books', icon: <FaBook />, path: '/books' },
-  { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
-  { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
-  { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
-  { name: 'Admin', icon: <FaUserFriends />, path: '/admin' },
-];
+    { name: 'Home', icon: <FaHome />, path: '/home' },
+    // { name: 'Admission', icon: <FaUniversity />, path: '/admission' },
+    // { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
+    { name: 'Food', icon: <FaUtensils />, path: '/food' },
+    // { name: 'Books', icon: <FaBook />, path: '/books' },
+    // { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
+    { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
+    { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
+  ];
+
+  if (user?.role === 'admin') {
+    menuItems.push({
+      name: 'Admin',
+      icon: <FaUserFriends />,
+      path: '/admin',
+    });
+  }
+
+  
+// if (!loading && role === 'admin') {
+//     menuItems.push({ name: 'Admin', icon: <FaUserFriends />, path: '/admin' });
+//   }
+
+
+//    if (loading) return <div>Loading...</div>;
 
 
   // Escape key + scroll lock
@@ -161,20 +182,20 @@ const dispatch=useDispatch();
             </button>
           </div>
 
-      <div className="flex-1 py-4">
+      <div className="flex-1 py-1">
   {menuItems.map((item, index) => (
     <Link
       key={item.name}
       to={item.path}
       onClick={() => setIsMobileMenuOpen(false)}
-      className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
+      className="flex items-center space-x-3 px-6 py-3 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
     >
       <span className="text-xl">{item.icon}</span>
       <span className="text-xl">{item.name}</span>
     </Link>
   ))}
             {/* Auth for Mobile */}
-            <div className="flex flex-col px-1 py-4 text-richblack-100 border-t border-slate-700">
+            <div className="flex flex-col px-1 py-2 text-richblack-100 border-t border-slate-700">
               {token ? (
                 <button
                   onClick={handlelogout}

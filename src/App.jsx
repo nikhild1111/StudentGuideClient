@@ -18,6 +18,8 @@ import VerifyEmail from './pages/VerifyEmail';
 import Admin from "../src/pages/Admin";
 import Hos from "../src/components/Admin/Hostels";
 import GuideApplication from "../src/components/Guide/Guideapplication"
+import ApplyMentorForm from "../src/components/Mentor/ApplyMentorForm";
+
 import { useEffect } from 'react';
 function App() {
 
@@ -49,6 +51,8 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/hos" element={<Hos />} />
           <Route path="/guideapplication" element={<GuideApplication />} />
+          <Route path="/ApplyMentorForm" element={<ApplyMentorForm />} />
+          
           <Route
             path="verify-email"
             element={

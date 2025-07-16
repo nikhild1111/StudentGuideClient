@@ -23,7 +23,7 @@ export function applyForGuide(formData, callback) {
       callback && callback(true);  // ✅ Success
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
-      toast.error(msg || "Server Error");
+      toast.error(msg+"please Login first" || "Server Error");
       dispatch(setError(msg));
       callback && callback(false);  // ❌ Failure
     } finally {

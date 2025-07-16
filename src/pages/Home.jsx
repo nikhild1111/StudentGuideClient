@@ -1,560 +1,4 @@
 
-// import React, { useState, useEffect } from 'react';
-// import {
-//   Menu,
-//   X,
-//   ChevronLeft,
-//   ChevronRight,
-// } from 'lucide-react';
-// import {
-//   FaHome,
-//   FaUniversity,
-//   FaBed,
-//   FaUtensils,
-//   FaBook,
-//   FaShoppingCart,
-//   FaQuestionCircle,
-//   FaUserFriends,
-//   FaSignInAlt,
-//   FaUserPlus,
-//   FaArrowRight,
-// } from 'react-icons/fa';
-// import { Link } from 'react-router-dom';
-
-// const LandingPage = () => {
-//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-//   const [currentSlide, setCurrentSlide] = useState(0);
-
-//   const sliderImages = [
-//     '/assets/dyphostel/hostel1.png',
-//     '/assets/dyphostel/hostel2.png',
-//     '/assets/dyphostel/hostel3.png',
-//     '/assets/dyphostel/hostel4.png',
-//     '/assets/dyphostel/hostel5.png',
-//     '/assets/dyphostel/hostel6.png',
-//   ];
-
-//   const isLoggedIn = false;
-
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
-//     }, 4000);
-//     return () => clearInterval(timer);
-//   }, []);
-
-//   useEffect(() => {
-//   document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'auto';
-//   return () => {
-//     document.body.style.overflow = 'auto';
-//   };
-// }, [isMobileMenuOpen]);
-
-
-//     const toggleMobileMenu = () => {
-//     setIsMobileMenuOpen((prev) => !prev);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-richblack-900">
-//       {/* Navigation */}
-//       <nav className="bg-slate-900/95 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="flex justify-between items-center h-16">
-//             {/* Logo */}
-//             <div className="flex items-center space-x-3">
-//               <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">
-//                 S
-//               </div>
-//               <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
-//             </div>
-
-//             {/* Desktop Navigation (only on ≥1100px) */}
-//             <div className="hidden custom-lg:flex items-center space-x-8">
-//               {['Home', 'Admission', 'Hostels', 'Food', 'Books', 'Grocery', 'Guide', 'Mentor'].map((item) => (
-//                 <a
-//                   key={item}
-//                   href="#"
-//                   className="text-gray-300 hover:text-yellow-400 font-medium transition-all duration-300 relative group"
-//                 >
-//                   {item}
-//                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-//                 </a>
-//               ))}
-//             </div>
-
-//             {/* Auth Buttons - Desktop */}
-//             <div className="hidden custom-lg:flex items-center space-x-4">
-//               <button className="text-gray-300 hover:text-yellow-400 font-medium transition-colors">
-//                 Log in
-//               </button>
-//               <button className="bg-gray-700 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-600 transition-colors">
-//                 Sign up
-//               </button>
-//             </div>
-
-//             {/* Mobile menu button */}
-//             <button
-//               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-//               className="custom-lg:hidden text-gray-300 hover:text-yellow-400"
-//             >
-//               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-//             </button>
-//           </div>
-
-
-         
-//         </div>
-//       </nav>
-
-
-//  {isMobileMenuOpen ? 
- 
-//  (
-
-// <div className={`fixed inset-0 z-50 bg-richblack-900 px-6 py-6 overflow-y-auto transition-transform duration-300 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-//   {/* Header with logo and close button */}
-//   <div className="flex items-center justify-between mb-6">
-//     <div className="flex items-center space-x-2">
-//       <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">
-//         S
-//       </div>
-//       <div className="text-xl font-bold text-white">StudentGuide</div>
-//     </div>
-//     <button onClick={() => setIsMobileMenuOpen(false)} className="text-white">
-//       <X size={24} />
-//     </button>
-//   </div>
-
-//   {/* Navigation Items */}
-//   <div className="space-y-4">
-//     {[
-//       { name: 'Home', icon: <FaHome /> },
-//       { name: 'Admission', icon: <FaUniversity /> },
-//       { name: 'Hostels', icon: <FaBed /> },
-//       { name: 'Food', icon: <FaUtensils /> },
-//       { name: 'Books', icon: <FaBook /> },
-//       { name: 'Grocery', icon: <FaShoppingCart /> },
-//       { name: 'Guide', icon: <FaQuestionCircle /> },
-//       { name: 'Mentor', icon: <FaUserFriends /> },
-//     ].map(({ name, icon }) => (
-//       <a
-//         key={name}
-//         href="#"
-//         className="flex items-center gap-4 text-richblack-100 hover:text-yellow-400 px-2 py-2 rounded-md transition duration-200"
-//       >
-//         <div className="text-2xl">{icon}</div>
-//         <div className="text-xl">{name}</div>
-//       </a>
-//     ))}
-
-//     <hr className="border-richblack-700 my-4" />
-
-//     {[{ name: 'Log in', icon: <FaSignInAlt /> }, { name: 'Sign up', icon: <FaUserPlus /> }].map(({ name, icon }) => (
-//       <a
-//         key={name}
-//         href="#"
-//         className="flex items-center gap-4 text-richblack-100 hover:text-yellow-400 px-2 py-2 rounded-md transition duration-200"
-//       >
-//         <span className="text-xl">{icon}</span>
-//         <span className="text-xl">{name}</span>
-//       </a>
-//     ))}
-//   </div>
-// </div>
-
-//  )
- 
-//  : ( 
-    
-//     <>
-    
-//     {/* Main Content */}
-//       <div className="relative min-h-screen">
-//         {/* Become a Mentor Button */}
-//         <Link to="/">
-//           <div className="group mx-auto mt-16 w-fit rounded-full bg-richblack-800 p-1 font-bold text-richblack-200 drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all duration-200 hover:scale-95 hover:drop-shadow-none">
-//             <div className="flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition-all duration-200 group-hover:bg-richblack-900">
-//               <p>Become an Mentor</p>
-//               <FaArrowRight />
-//             </div>
-//           </div>
-//         </Link>
-
-//         {/* Hero Section */}
-//         <div className="text-center px-4 sm:px-6 lg:px-8 py-16">
-//           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-//             Empower Your Future with{' '}
-//             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-//               Student Guide
-//             </span>
-//           </h1>
-
-//           <p className="text-gray-400 text-lg sm:text-xl max-w-4xl mx-auto mb-12 leading-relaxed">
-//             Navigate your academic journey with confidence. Our comprehensive platform helps freshers with admissions,
-//             hostel bookings, food options, books, groceries, and connects you with experienced mentors for personalized guidance.
-//           </p>
-
-//           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-//             <button className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105">
-//               Learn More
-//             </button>
-//             <button className="bg-transparent border-2 border-gray-600 hover:border-yellow-400 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105">
-//               Book a Demo
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Image Slider */}
-//         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-//           <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl">
-//             {sliderImages.map((image, index) => (
-//               <div
-//                 key={index}
-//                 className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
-//               >
-//                 <img src={image} alt={`Campus ${index + 1}`} className="w-full h-full object-cover" />
-//                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-//               </div>
-//             ))}
-
-//             <button
-//               onClick={() => setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)}
-//               className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
-//             >
-//               <ChevronLeft size={20} />
-//             </button>
-//             <button
-//               onClick={() => setCurrentSlide((prev) => (prev + 1) % sliderImages.length)}
-//               className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
-//             >
-//               <ChevronRight size={20} />
-//             </button>
-
-//             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-//               {sliderImages.map((_, index) => (
-//                 <button
-//                   key={index}
-//                   onClick={() => setCurrentSlide(index)}
-//                   className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? 'bg-yellow-400' : 'bg-white/50'}`}
-//                 />
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       </>
-//     )};
-//     </div>
-//   );
-// };
-
-// export default LandingPage;
-
-
-
-
-
-
-// // LandingPage.jsx
-// import React, { useState, useEffect } from 'react';
-//  // Change this to handle actual login state
-// import {
-//   Menu,
-//   X,
-//   ChevronLeft,
-//   ChevronRight,
-// } from 'lucide-react';
-// import {
-//   FaHome,
-//   FaUniversity,
-//   FaBed,
-//   FaUtensils,
-//   FaBook,
-//   FaShoppingCart,
-//   FaQuestionCircle,
-//   FaUserFriends,
-//   FaSignInAlt,
-//   FaUserPlus,
-//   FaArrowRight,
-// } from 'react-icons/fa';
-// import { Link } from 'react-router-dom';
-
-// const LandingPage = () => {
-//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-//   const [currentSlide, setCurrentSlide] = useState(0);
-// const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-
-//   // Auto Slide
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
-//     }, 4000);
-//     return () => clearInterval(timer);
-//   }, []);
-
-//   // Handle body scroll + Escape key
-//   useEffect(() => {
-//     const handleEsc = (e) => {
-//       if (e.key === 'Escape') setIsMobileMenuOpen(false);
-//     };
-
-//     if (isMobileMenuOpen) {
-//       document.body.style.overflow = 'hidden';
-//       window.addEventListener('keydown', handleEsc);
-//     } else {
-//       document.body.style.overflow = 'auto';
-//     }
-
-//     return () => {
-//       document.body.style.overflow = 'auto';
-//       window.removeEventListener('keydown', handleEsc);
-//     };
-//   }, [isMobileMenuOpen]);
-
-
-
-
-
-
-//   const sliderImages = [
-//     '/assets/dyphostel/hostel1.png',
-//     '/assets/dyphostel/hostel2.png',
-//     '/assets/dyphostel/hostel3.png',
-//     '/assets/dyphostel/hostel4.png',
-//     '/assets/dyphostel/hostel5.png',
-//     '/assets/dyphostel/hostel6.png',
-//   ];
-
-//     const menuItems = [
-//       { name: 'Home', icon: <FaHome /> },
-//       { name: 'Admission', icon: <FaUniversity /> },
-//       { name: 'Hostels', icon: <FaBed /> },
-//       { name: 'Food', icon: <FaUtensils /> },
-//       { name: 'Books', icon: <FaBook /> },
-//       { name: 'Grocery', icon: <FaShoppingCart /> },
-//       { name: 'Guide', icon: <FaQuestionCircle /> },
-//       { name: 'Mentor', icon: <FaUserFriends /> },
-//     ];
-//  const toggleMobileMenu = () => {
-//     setIsMobileMenuOpen(!isMobileMenuOpen);
-//   };
-
-//   const handleLogin = () => {
-//     setIsLoggedIn(!isLoggedIn);
-//     setIsMobileMenuOpen(false);
-//   };
-
-//   return (
-// <div className="bg-richblack-900 min-h-screen w-full overflow-x-hidden">
-
-//       {/* Navbar */}
-//       <nav className="bg-slate-900/95 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="flex justify-between items-center h-16">
-//             {/* Logo */}
-//             <div className="flex items-center space-x-3">
-//               <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
-//               <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
-//             </div>
-
-//             {/* Desktop Nav */}
-//             <div className="hidden custom-lg:flex items-center space-x-8">
-//               {['Home', 'Admission', 'Hostels', 'Food', 'Books', 'Grocery', 'Guide', 'Mentor'].map((item) => (
-//                 <a
-//                   key={item}
-//                   href="#"
-//                   className="text-gray-300 hover:text-yellow-400 font-medium transition-all duration-300 relative group"
-//                 >
-//                   {item}
-//                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-//                 </a>
-//               ))}
-//             </div>
-
-//             {/* Auth Buttons */}
-//             <div className="hidden custom-lg:flex items-center space-x-4">
-//               <button className="text-gray-300 hover:text-yellow-400 font-medium transition-colors">Log in</button>
-//               <button className="bg-gray-700 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-600 transition-colors">Sign up</button>
-//             </div>
-
-//             {/* Mobile Menu Button */}
-//             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="custom-lg:hidden text-gray-300 hover:text-yellow-400">
-//               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-//             </button>
-//           </div>
-//         </div>
-//       </nav>
-
-
-//   {/* Mobile Menu Overlay */}
-//       <div 
-//         className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 custom-lg:hidden ${
-//           isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-//         }`}
-//         onClick={toggleMobileMenu}
-//       />
-
-
-//       {/* Mobile Menu */}
-//   <div 
-//   className={`fixed top-0 right-0 h-full w-1/2 bg-slate-900 shadow-2xl z-50 transition-transform duration-300 ease-in-out transform ${
-//     isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-//   }`}
-// >
-
-//         <div className="flex flex-col h-full">
-//           {/* Menu Header */}
-//           <div className="flex items-center justify-between p-6 border-b border-slate-700">
-//             <div className="flex items-center space-x-2">
-//             </div>
-//             <button
-//               onClick={toggleMobileMenu}
-//               className="text-gray-300 hover:text-yellow-400 transition-colors"
-//             >
-//               <X size={20} />
-//             </button>
-//           </div>
-
-//           {/* Menu Items */}
-//           <div className="flex-1 py-4">
-//             {menuItems.map((item, index) => (
-//               <a
-//                 key={item.name}
-//                 href={item.href}
-//                 onClick={() => setIsMobileMenuOpen(false)}
-//                 className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
-//                 style={{ animationDelay: `${index * 50}ms` }}
-//               >
-//                 <span className="text-richblack-100 hover:text-yellow-400 text-xl">{item.icon}</span>
-//                 <span className="text-xl">{item.name}</span>
-//               </a>
-//             ))}
-
-//            <div className="flex flex-col px-1 py-4 text-richblack-100 border-b border-richblack-700">
-//   {isLoggedIn ? (
-//     <button
-//       onClick={handleLogin}
-//       className="fflex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
-//     >
-//       <FaSignInAlt className="text-xl" />
-//       <span className="text-xl">Log out</span>
-//     </button>
-//   ) : (
-//     <>
-//       <Link
-//         to="/"
-//         className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
-//       >
-//         <FaSignInAlt className="text-xl" />
-//         <span className="text-xl">Log in</span>
-//       </Link>
-
-//       <Link
-//         to="/"
-//         className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200 border-b border-richblack-700"
-//       >
-//         <FaUserPlus className="text-xl" />
-//         <span className="text-xl">Sign up</span>
-//       </Link>
-//     </>
-//   )}
-// </div>
-
-
-
-//           </div>
-
-//           {/* Auth Section */}
-           
-//         </div>
-//       </div>
-
-
-//       {/* Main Content */}
-//       <div className="relative">
-//         {/* CTA Button */}
-//         <Link to="/">
-//           <div className="group mx-auto mt-16 w-fit rounded-full bg-richblack-800 p-1 font-bold text-richblack-200 drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all duration-200 hover:scale-95 hover:drop-shadow-none">
-//             <div className="flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition-all duration-200 group-hover:bg-richblack-900">
-//               <p>Become a Mentor</p>
-//               <FaArrowRight />
-//             </div>
-//           </div>
-//         </Link>
-
-//         {/* Hero Section */}
-//         <div className="text-center px-4 sm:px-6 lg:px-8 py-16">
-//           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-//             Empower Your Future with{' '}
-//             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Student Guide</span>
-//           </h1>
-//           <p className="text-gray-400 text-lg sm:text-xl max-w-4xl mx-auto mb-12 leading-relaxed">
-//             Navigate your academic journey with confidence. Our comprehensive platform helps freshers with admissions,
-//             hostel bookings, food options, books, groceries, and connects you with experienced mentors for personalized guidance.
-//           </p>
-
-//           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-//             <button className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105">
-//               Learn More
-//             </button>
-//             <button className="bg-transparent border-2 border-gray-600 hover:border-yellow-400 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105">
-//               Book a Demo
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Image Slider */}
-//         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-//           <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl">
-//             {sliderImages.map((image, index) => (
-//               <div
-//                 key={index}
-//                 className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
-//               >
-//                 <img src={image} alt={`Campus ${index + 1}`} className="w-full h-full object-cover" />
-//                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-//               </div>
-//             ))}
-
-//             <button
-//               onClick={() => setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)}
-//               className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
-//             >
-//               <ChevronLeft size={20} />
-//             </button>
-//             <button
-//               onClick={() => setCurrentSlide((prev) => (prev + 1) % sliderImages.length)}
-//               className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
-//             >
-//               <ChevronRight size={20} />
-//             </button>
-
-//             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-//               {sliderImages.map((_, index) => (
-//                 <button
-//                   key={index}
-//                   onClick={() => setCurrentSlide(index)}
-//                   className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? 'bg-yellow-400' : 'bg-white/50'}`}
-//                 />
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LandingPage;
-
-
-
-
-
-
-
 // LandingPage.jsx
 import React, { useState, useEffect } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
@@ -595,8 +39,8 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
  const buttonRoutes = {
     Admission: "/admission",
     Food: "/food",
-    Books: "/books",
-    Hostels: "/hostels",
+    // Books: "/books",
+    // Hostels: "/hostels",
     Mentors: "/mentor",
   };
 
@@ -604,7 +48,12 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     <div className="bg-richblack-900 min-h-screen w-full overflow-x-hidden">
 
       {/* CTA Button */}
-      <Link to="/mentor">
+{token ? (
+  <>
+  
+  
+  
+  <Link to="/mentor">
         <div className="group mx-auto mt-16 w-fit rounded-full bg-richblack-700 p-1 font-bold text-richblack-100 drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all duration-200 hover:scale-95 hover:drop-shadow-none">
           <div className="flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition-all duration-200 group-hover:bg-richblack-900">
             <p>Become a Mentor</p>
@@ -612,6 +61,25 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
           </div>
         </div>
       </Link>
+      
+  </>
+      ):(  
+        <>
+        
+        
+       
+        <Link to="/login">
+        <div className="group mx-auto mt-16 w-fit rounded-full bg-richblack-700 p-1 font-bold text-richblack-100 drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all duration-200 hover:scale-95 hover:drop-shadow-none">
+          <div className="flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition-all duration-200 group-hover:bg-richblack-900">
+            <p>Become a Mentor</p>
+            <FaArrowRight />
+          </div>
+        </div>
+      </Link>
+     </>
+    )
+}
+
 
       {/* Hero Section */}
       <div className="text-center px-4 sm:px-6 lg:px-8 py-8 text-white">
@@ -636,10 +104,10 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
         </div> */}
 
            <div className="mt-8 flex flex-row gap-7 justify-center">
-            <CTAButton active={true} linkto={"/"}>
+            <CTAButton active={true} linkto={"https://www.dypiu.ac.in/gallery"}>
               Learn More
             </CTAButton>
-            <CTAButton active={false} linkto={"/"}>
+            <CTAButton active={false} linkto={"https://www.dypiu.ac.in/gallery"}>
               Book a Demo
             </CTAButton>
           </div>
@@ -754,11 +222,11 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
 </div>
 
 
-{/* Book Exchange Section */}
+{/* Book Exchange Section
 <div className="w-full bg-richblack-900 text-white py-16 px-4 sm:px-8 lg:px-20">
   <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
     
-    {/* Left - Book Image */}
+ 
     <div className="flex-1 w-full">
       <div className="bg-gradient-to-tr from-blue-900/50 to-blue-700/20 rounded-lg overflow-hidden shadow-lg">
         <img
@@ -769,7 +237,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
       </div>
     </div>
 
-    {/* Right - Content */}
+  
     <div className="flex-1">
       <h2 className="text-3xl sm:text-4xl font-bold leading-snug mb-6">
         Share or Get <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Books Easily</span> with Student Guide
@@ -790,19 +258,19 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
           </div>
     </div>
   </div>
-</div>
+</div> */}
 
 
 
-{/* Food & Mess Section */}
-<div className="w-full bg-richblack-900 text-white py-16 px-4 sm:px-8 lg:px-20">
+
+{/* <div className="w-full bg-richblack-900 text-white py-16 px-4 sm:px-8 lg:px-20">
   <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
 
-    {/* Left - Content */}
+
     <div className="flex-1">
       <h2 className="text-3xl sm:text-4xl font-bold leading-snug mb-6">
         Find 
-        {/* <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Mess & Tiffin</span> */}
+
 
  <HighlightText text={"Mess & Tiffin"} /> services around you
       </h2>
@@ -820,7 +288,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
 
     </div>
 
-    {/* Right - Food Image */}
+
     <div className="flex-1 w-full max-w-md">
       <div className="bg-gradient-to-tr from-yellow-900/40 to-yellow-700/20 rounded-lg overflow-hidden shadow-xl">
         <img
@@ -833,7 +301,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
   </div>
 </div>
 <div className="bg-richblack-900 text-white py-16 px-4 sm:px-6 lg:px-20 flex flex-col-reverse md:flex-row items-center gap-10">
-  {/* Left Image (on desktop), goes below on mobile */}
+
   <div className="flex-1 max-w-lg">
     <img
       src={room}
@@ -842,7 +310,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
     />
   </div>
 
-  {/* Right Text Content (on desktop), goes above on mobile */}
+
   <div className="flex-1">
     <h2 className="text-4xl sm:text-5xl font-bold leading-tight mb-6">
       Find <span className="text-yellow-400">hostels near DYP</span> with ease
@@ -861,7 +329,7 @@ const sliderImages = [hostel1, hostel2, hostel3, hostel4, hostel5, hostel6];
           </div>
 
   </div>
-</div>
+</div> */}
 
 
 

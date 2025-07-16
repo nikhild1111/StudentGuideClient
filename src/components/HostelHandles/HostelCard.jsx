@@ -140,7 +140,7 @@ const HostelCard = ({
         
         {/* Services */}
         {hostel.services && hostel.services.length > 0 && (
-          <div className="mb-4 h-20">
+          <div className="mb-4 h-28 block">
             <h4 className="text-sm font-medium text-gray-300 mb-2">Services</h4>
             <div className="flex flex-wrap gap-2">
               {hostel.services.map(service => (
