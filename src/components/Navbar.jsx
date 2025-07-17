@@ -45,13 +45,13 @@ const user = useSelector((state) => state.auth.user);
   };
 
   const menuItems = [
-    { name: 'Home', icon: <FaHome />, path: '/home' },
+    // { name: 'Home', icon: <FaHome />, path: '/home' },
     // { name: 'Admission', icon: <FaUniversity />, path: '/admission' },
     // { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
-    { name: 'Food', icon: <FaUtensils />, path: '/food' },
+    // { name: 'Food', icon: <FaUtensils />, path: '/food' },
     // { name: 'Books', icon: <FaBook />, path: '/books' },
     // { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
-    { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
+    // { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
     { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
   ];
 
@@ -99,7 +99,7 @@ const user = useSelector((state) => state.auth.user);
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
        <div className="flex items-center space-x-3">
-  <Link to="/home" className="flex items-center space-x-3">
+  <Link to="/mentor" className="flex items-center space-x-3">
     <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
     <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
   </Link>
@@ -121,7 +121,7 @@ const user = useSelector((state) => state.auth.user);
 
 
             {/* Auth Buttons */}
-            <div className="hidden custom-lg:flex items-center space-x-4">
+            {/* <div className="hidden custom-lg:flex items-center space-x-4">
               {token ? (
                 <button
                   onClick={handlelogout}
@@ -145,7 +145,7 @@ const user = useSelector((state) => state.auth.user);
 
                 </>
               )}
-            </div>
+            </div> */}
 
 
 
@@ -195,7 +195,7 @@ const user = useSelector((state) => state.auth.user);
     </Link>
   ))}
             {/* Auth for Mobile */}
-            <div className="flex flex-col px-1 py-2 text-richblack-100 border-t border-slate-700">
+            {/* <div className="flex flex-col px-1 py-2 text-richblack-100 border-t border-slate-700">
               {token ? (
                 <button
                   onClick={handlelogout}
@@ -224,7 +224,7 @@ const user = useSelector((state) => state.auth.user);
                   </Link>
                 </>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
