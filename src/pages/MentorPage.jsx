@@ -309,6 +309,7 @@ const MentorPage = () => {
   const navigate = useNavigate();
 
   const mentors = useSelector((state) => state.mentor.mentors);
+  console.log(mentors)
   const pagination = useSelector((state) => state.mentor.pagination);
 
   const [query, setQuery] = useState({

@@ -13,13 +13,25 @@ const MentorCard = ({ mentor }) => {
       toast.error("Resume not available");
       return;
     }
-    // const link = document.createElement('a');
-    // link.href = mentor.resume;
-    // link.download = `${mentor.name}_Resume.pdf`;
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    toast.success("Downloading Resume");
+  //    const resumeUrl = `${import.meta.env.VITE_BACKEND_URL}${mentor.resume}`;
+
+  // // 1. Trigger download
+  // const link = document.createElement('a');
+  // link.href = resumeUrl;
+  // link.download = `${mentor.name}_Resume.pdf`;
+  // document.body.appendChild(link);
+  // link.click();
+  // document.body.removeChild(link);
+
+  // // 2. Open in new tab (view)
+  // window.open(resumeUrl, '_blank');
+
+  // toast.success("Downloading and opening resume");
+
+
+   const resumeUrl = `${import.meta.env.VITE_BACKEND_URL}${mentor.resume}`;
+  window.open(resumeUrl, '_blank'); // opens in new tab
+  toast.success("Opening Resume");
   };
 
   return (
