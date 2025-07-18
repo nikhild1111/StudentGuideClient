@@ -294,30 +294,30 @@
 
 
 
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Filter, RefreshCcw ,Search} from "lucide-react";
+import { Filter, RefreshCcw, Search } from "lucide-react";
 import { searchMentors } from "../services/operations/mentorAPI";
 import MentorCard from "../components/Mentor/MentorCard";
 import Pagination from "../components/Mentor/Paganation";
 import { useNavigate } from "react-router-dom";
-import  Loader  from "../components/LoadingSpinner";
+import Loader from "../components/LoadingSpinner";
 import HeroSection from "../components/Commonhooks/HeroSection";
+
 const MentorPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const mentors = useSelector((state) => state.mentor.mentors);
-  console.log(mentors)
   const pagination = useSelector((state) => state.mentor.pagination);
 
   const [query, setQuery] = useState({
-    name: "",
+    keyword: "",
     department: "",
     company: "",
     domain: "",
     year: "",
+    page: 1,
   });
 
   const [showFilters, setShowFilters] = useState(false);
@@ -327,65 +327,62 @@ const MentorPage = () => {
   }, [dispatch]);
 
   const handleSearch = () => {
-    dispatch(searchMentors(query));
+    dispatch(searchMentors({ ...query, page: 1 }));
   };
 
   const clearFilters = () => {
     setQuery({
-      name: "",
+      keyword: "",
       department: "",
       company: "",
       domain: "",
       year: "",
+      page: 1,
     });
-    dispatch(searchMentors({}));
+    dispatch(searchMentors({ page: 1 }));
   };
 
   const handlePageChange = (page) => {
     dispatch(searchMentors({ ...query, page }));
+    setQuery((prev) => ({ ...prev, page }));
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
       {/* Header */}
-  
-<HeroSection
-  title="Your Perfect"
-  highlight="Mentor"
-  subtitle="Connect with experienced mentors to guide your academic journey"
-  buttonText="Become a Mentor"
-  linkIfToken="/ApplyMentorForm"
-  linkIfNotToken="/login"
-/>
-
+      <HeroSection
+        title="Your Perfect"
+        highlight="Mentor"
+        subtitle="Connect with experienced mentors to guide your academic journey"
+        buttonText="Become a Mentor"
+        linkIfToken="/ApplyMentorForm"
+        linkIfNotToken="/login"
+      />
 
       {/* Search Bar */}
-<div className="max-w-4xl mx-auto mb-4 px-4">
-  <div className="relative flex items-center w-full">
-    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-    
-    <input
-      type="text"
-      placeholder="Search by name, email, city, department..."
-      value={query.name}
-      onChange={(e) => setQuery({ ...query, name: e.target.value })}
-      className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-700 text-white placeholder-gray-400 outline-none"
-    />
-
-    <button
-      onClick={handleSearch}
-      className="ml-4 bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded-md font-semibold"
-    >
-      Search
-    </button>
-  </div>
-</div>
-
-
+      <div className="max-w-4xl mx-auto mb-4 px-4">
+        <div className="relative flex items-center w-full">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search by name, email, domain..."
+            value={query.keyword}
+            onChange={(e) =>
+              setQuery({ ...query, keyword: e.target.value, page: 1 })
+            }
+            className="w-full pl-10 pr-4 py-2 rounded-md bg-gray-700 text-white placeholder-gray-400 outline-none"
+          />
+          <button
+            onClick={handleSearch}
+            className="ml-4 bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded-md font-semibold"
+          >
+            Search
+          </button>
+        </div>
+      </div>
 
       {/* Filter Row */}
       <div className="flex flex-row justify-center items-center gap-4 mb-8 max-w-4xl mx-auto">
-        {/* Toggle Filter */}
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md text-white"
@@ -394,12 +391,6 @@ const MentorPage = () => {
           Filters
         </button>
 
-        {/* Search Button */}
-
-   
-      
-
-        {/* Refresh / Clear */}
         <button
           onClick={clearFilters}
           className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md text-white"
@@ -414,44 +405,93 @@ const MentorPage = () => {
         <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-4 max-w-5xl mx-auto mb-6">
           <select
             value={query.department}
-            onChange={(e) => setQuery({ ...query, department: e.target.value })}
+            onChange={(e) =>
+              setQuery({ ...query, department: e.target.value, page: 1 })
+            }
             className="bg-gray-700 text-white rounded-md px-3 py-2"
           >
             <option value="">Select Department</option>
-            <option value="Information Technology">Information Technology</option>
             <option value="Computer Engineering">Computer Engineering</option>
-            <option value="Electrical Engineering">Electrical Engineering</option>
-            {/* Add more as needed */}
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics & Telecommunication">
+              Electronics & Telecommunication
+            </option>
+            <option value="Instrumentation & Control Engineering">
+              Instrumentation & Control Engineering
+            </option>
+            <option value="Robotics & Automation">Robotics & Automation</option>
+            <option value="Artificial Intelligence & Data Science">
+              AI & Data Science
+            </option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
           </select>
 
-          <select
+          {/* <select
             value={query.company}
-            onChange={(e) => setQuery({ ...query, company: e.target.value })}
+            onChange={(e) =>
+              setQuery({ ...query, company: e.target.value, page: 1 })
+            }
             className="bg-gray-700 text-white rounded-md px-3 py-2"
           >
             <option value="">Select Company</option>
             <option value="TCS">TCS</option>
             <option value="Infosys">Infosys</option>
             <option value="Wipro">Wipro</option>
-            {/* Add more as needed */}
-          </select>
+          </select> */}
+  <input
+    type="text"
+    value={query.company || ""}
+    onChange={(e) =>
+      setQuery({ ...query, company: e.target.value, page: 1 })
+    }
+    placeholder="Enter Company Name"
+    className="bg-gray-700 text-white rounded-md px-3 py-2"
+  />
 
-          <select
-            value={query.domain}
-            onChange={(e) => setQuery({ ...query, domain: e.target.value })}
-            className="bg-gray-700 text-white rounded-md px-3 py-2"
-          >
-            <option value="">Select Domain</option>
-            <option value="Web Development">Web Development</option>
-            <option value="AI/ML">AI/ML</option>
-            <option value="Cloud">Cloud</option>
-          </select>
+
+
+
+
+
+
+    <select
+  value={query.domain}
+  onChange={(e) =>
+    setQuery({ ...query, domain: e.target.value, page: 1 })
+  }
+  className="bg-gray-700 text-white rounded-md px-3 py-2"
+>
+  <option value="">Select Domain</option>
+  <option value="Web Development">Web Development</option>
+  <option value="MERN">MERN</option>
+  <option value="AI/ML">AI/ML</option>
+  <option value="Cloud Computing">Cloud Computing</option>
+  <option value="Data Science">Data Science</option>
+  <option value="Cybersecurity">Cybersecurity</option>
+  <option value="Mobile App Development">Mobile App Development</option>
+  <option value="Blockchain">Blockchain</option>
+  <option value="DevOps">DevOps</option>
+  <option value="UI/UX Design">UI/UX Design</option>
+  <option value="AR/VR">AR/VR</option>
+  <option value="Game Development">Game Development</option>
+  <option value="Embedded Systems">Embedded Systems</option>
+  <option value="IOT">IoT (Internet of Things)</option>
+  <option value="Networking">Networking</option>
+  <option value="Software Testing">Software Testing</option>
+  <option value="Full Stack Development">Full Stack Development</option>
+  <option value="Product Management">Product Management</option>
+  <option value="Project Management">Project Management</option>
+</select>
+
 
           <input
             type="number"
             placeholder="Passout Year"
             value={query.year}
-            onChange={(e) => setQuery({ ...query, year: e.target.value })}
+            onChange={(e) =>
+              setQuery({ ...query, year: e.target.value, page: 1 })
+            }
             className="bg-gray-700 text-white rounded-md px-3 py-2"
           />
         </div>
@@ -464,12 +504,14 @@ const MentorPage = () => {
             <MentorCard key={mentor._id} mentor={mentor} />
           ))
         ) : (
-          <p className="text-center col-span-full text-gray-400">No mentors found.</p>
+          <p className="text-center col-span-full text-gray-400">
+            No mentors found. Please Retresh and Search again.
+          </p>
         )}
       </div>
 
       {/* Pagination */}
-      {pagination && (
+      {pagination && pagination.totalPages > 1 && (
         <Pagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}

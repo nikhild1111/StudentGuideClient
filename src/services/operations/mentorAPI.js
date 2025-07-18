@@ -95,13 +95,17 @@ export function searchMentors(query = {}, callback) {
   return async (dispatch) => {
     dispatch(setMentorLoading(true));
     try {
-      const { data } = await axios.get(`${BASE_URL}/search`, {
-        params: query,
-        headers: getAuthHeaders().headers,
-      });
+      const { data } = await axios.post(
+        `${BASE_URL}/search`,
+        query, // now passed in the body
+        getAuthHeaders() // this contains headers only
+      );
+
       if (!data.success) throw new Error(data.message);
+
       dispatch(setMentors(data.data));
       dispatch(setMentorPagination(data.pagination));
+
       callback && callback(data);
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
