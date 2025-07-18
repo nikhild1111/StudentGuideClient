@@ -96,7 +96,7 @@ for (let [key, value] of submitData.entries()) {
         if (success) {
           navigate("/mentor");
         } else {
-          toast.error("Submission failed. Please try again.");
+          // toast.error("Submission failed. Please try again.");
         }
       })
     );
