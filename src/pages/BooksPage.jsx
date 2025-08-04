@@ -2,8 +2,7 @@ import React from 'react'
 
 const BooksPage = () => {
   return (
-     <div className='bg-gray-900 min-h-screen text-center text-white'>
-
+     <div className='w-screen h-screen bg-gray text-white flex items-center justify-center'>
       Coming Soon
     </div>
   )

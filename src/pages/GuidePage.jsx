@@ -10,7 +10,7 @@ import FilterPanel from '../components/Guide/FilterPanel';
 import GuideCard from '../components/Guide/GuideCard';
 import CTAButton from "../components/core/HomePage/Button";
 
-import HeroSection from "../components/Commonhooks/HeroSection";
+import HeroSection from "../components/Common/HeroSection";
 
 
 const GuidePage = () => {
@@ -150,7 +150,9 @@ const GuidePage = () => {
           </div>
         ) : currentGuides.length > 0 ? (
           <>
-            {/* Responsive Grid - Optimized for compact cards */}
+            {/* Responsive Grid
+            - Optimized for compact cards */}
+           { console.log(currentGuides)}
 
             <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-900">
               {currentGuides.map((guide) => (

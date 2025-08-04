@@ -6,10 +6,13 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 const GuideCard = ({ guide }) => {
     const navigate = useNavigate();
+
+
+    console.log(guide)
   const defaultImage = "https://via.placeholder.com/150x150?text=Guide";
-  const imageUrl = guide.image?.startsWith("/uploads/")
-    ? `${import.meta.env.VITE_BACKEND_URL}${guide.image}`
-    : guide.image || defaultImage;
+  // const imageUrl = guide.image?.startsWith("/uploads/")
+  //   ? `${import.meta.env.VITE_BACKEND_URL}${guide.image}`
+  //   : guide.image || defaultImage;
 
   const handlePay = () => {
     const token = localStorage.getItem("token");
@@ -32,7 +35,7 @@ const GuideCard = ({ guide }) => {
       {/* Image and Role Tag */}
       <div className="relative w-full h-[220px] overflow-hidden rounded-t-xl bg-black">
         <img
-          src={imageUrl}
+          src={guide.image}
           alt={guide.name}
           className="w-full h-full object-contain object-top"
         />

@@ -4,9 +4,9 @@ import { toast } from 'react-hot-toast';
 
 const MentorCard = ({ mentor }) => {
   const defaultImage = "https://via.placeholder.com/150x150?text=Mentor";
-  const imageUrl = mentor.image?.startsWith("/uploads/")
-    ? `${import.meta.env.VITE_BACKEND_URL}${mentor.image}`
-    : mentor.image || defaultImage;
+  // const imageUrl = mentor.image?.startsWith("/uploads/")
+  //   ? `${import.meta.env.VITE_BACKEND_URL}${mentor.image}`
+  //   : mentor.image || defaultImage;
 
   const handleDownloadResume = () => {
     if (!mentor.resume) {
@@ -40,7 +40,7 @@ const MentorCard = ({ mentor }) => {
       {/* Image and Role Tag */}
       <div className="relative w-full h-[220px] overflow-hidden rounded-t-xl bg-black">
         <img
-          src={imageUrl}
+          src={mentor.image}
           alt={mentor.name}
           className="w-full h-full object-contain object-top"
         />

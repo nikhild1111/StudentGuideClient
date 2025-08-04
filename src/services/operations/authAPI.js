@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode"; // ✅ correct
 import { toast } from "react-hot-toast";
 
 
+
 import {
   setLoading,
   setToken,
@@ -15,7 +16,8 @@ import {
 import { clearCart } from "../../slices/CartSlice";
  const Backend_url = import.meta.env.VITE_BACKEND_URL;
 
-const BASE_URL = `${Backend_url}/api/v1/auth`
+const BASE_URL = `${Backend_url}/api/v1/auth`;
+
 
 // ✅ SEND OTP
 export function sendOtp(formData, navigate) {
@@ -138,13 +140,13 @@ export function logoutauth(navigate) {
   }
 }
 
-// ✅ CHECK AUTH ON APP LOAD
-export function checkAuthOnAppLoad() {
+
+export function checkAuthOnAppLoad(navigate) {
   return async (dispatch) => {
     const token = localStorage.getItem("token")
     if (!token) {
       dispatch(logout(null))
-      return
+      return;
     }
 
     try {
@@ -153,28 +155,24 @@ export function checkAuthOnAppLoad() {
 
       if (decoded.exp < currentTime) {
         dispatch(logout(null))
-        toast.error("Token Expired Please login again.")
-        return
+        toast.error("Token Expired. Please login again.");
+        navigate('/home');  // ✅ works now
+        return;
       }
 
       dispatch(setLoading(true))
       const { data } = await axios.get(`${BASE_URL}/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
 
       if (!data.success) throw new Error(data.message)
 
-      // const userImage = `https://api.dicebear.com/5.x/initials/svg?seed=${data.user.name}`
       dispatch(setToken(token))
-
-      console.log(data.user);
       dispatch(setUser(data.user))
     } catch (error) {
       const msg =
         error.response?.data?.message || error.message || "Auth failed"
-       dispatch(logout(null))
+      dispatch(logout(null))
       toast.error(msg)
       console.error("AUTH CHECK ERROR:", msg)
     } finally {

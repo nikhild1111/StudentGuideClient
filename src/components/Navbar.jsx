@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 // import { logout } from "../../services/operations/authAPI";
 
 // import useUserRole from '../components/Commonhooks/UseUseRole'
 import { useSelector, useDispatch } from 'react-redux';
-
-import {logoutauth} from "../services/operations/authAPI"
+import { AiOutlineCaretDown } from "react-icons/ai";
+import { VscDashboard, VscSignOut } from "react-icons/vsc";
+import {logoutauth} from "../services/operations/authAPI";
+import ProfileDropdown from "./Profile/Profiledropdown";
 import {
   FaHome,
   FaUniversity,
@@ -26,13 +28,12 @@ const Navbar = () => {
   const navigate=useNavigate();
 const dispatch=useDispatch();
 const user = useSelector((state) => state.auth.user);
+console.log(user);
 
 //  const { role, loading } = useUserRole();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
   const toggleMobileMenu = () => {
@@ -45,13 +46,13 @@ const user = useSelector((state) => state.auth.user);
   };
 
   const menuItems = [
-    // { name: 'Home', icon: <FaHome />, path: '/home' },
+    { name: 'Home', icon: <FaHome />, path: '/home' },
     // { name: 'Admission', icon: <FaUniversity />, path: '/admission' },
-    // { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
-    // { name: 'Food', icon: <FaUtensils />, path: '/food' },
-    // { name: 'Books', icon: <FaBook />, path: '/books' },
-    // { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
-    // { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
+    { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
+    { name: 'Food', icon: <FaUtensils />, path: '/food' },
+    { name: 'Books', icon: <FaBook />, path: '/books' },
+    { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
+    { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
     { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
   ];
 
@@ -63,15 +64,8 @@ const user = useSelector((state) => state.auth.user);
     });
   }
 
+
   
-// if (!loading && role === 'admin') {
-//     menuItems.push({ name: 'Admin', icon: <FaUserFriends />, path: '/admin' });
-//   }
-
-
-//    if (loading) return <div>Loading...</div>;
-
-
   // Escape key + scroll lock
   useEffect(() => {
     const handleEsc = (e) => {
@@ -99,7 +93,7 @@ const user = useSelector((state) => state.auth.user);
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
        <div className="flex items-center space-x-3">
-  <Link to="/mentor" className="flex items-center space-x-3">
+  <Link to="/home" className="flex items-center space-x-3">
     <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
     <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
   </Link>
@@ -117,54 +111,25 @@ const user = useSelector((state) => state.auth.user);
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
     </Link>
   ))}
+
+  
+</div>
+
+<div className="hidden custom-lg:flex">
+  <ProfileDropdown />
 </div>
 
 
-            {/* Auth Buttons */}
-            {/* <div className="hidden custom-lg:flex items-center space-x-4">
-              {token ? (
-                <button
-                  onClick={handlelogout}
-                  className="text-gray-300 hover:text-yellow-400 font-medium transition-colors"
-                >
-                  Log out
-                </button>
-              ) : (
-                <>
-                     <Link to="/login">
-                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                    Log in
-                  </button>
-                </Link>
 
-                     <Link to="/signup">
-                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                    Sign up
-                  </button>
-                </Link>
-
-                </>
-              )}
-            </div> */}
-
-
-
-  
-            {/* Mobile Button */}
-            <button onClick={toggleMobileMenu} className="custom-lg:hidden text-gray-300 hover:text-yellow-400">
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          
+  {/* Mobile Button */}
+            <button className="custom-lg:hidden text-gray-300 hover:text-yellow-400">
+              {isMobileMenuOpen ? ( <><X size={24} onClick={toggleMobileMenu} /></>) : (<> <div className="flex flex-row space-x-3"><ProfileDropdown/> <Menu size={24} onClick={toggleMobileMenu}/></div></>)}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Overlay */}
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 custom-lg:hidden ${
-          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-        onClick={toggleMobileMenu}
-      />
 
       {/* Mobile Menu */}
       <div
@@ -183,6 +148,8 @@ const user = useSelector((state) => state.auth.user);
           </div>
 
       <div className="flex-1 py-1">
+
+    
   {menuItems.map((item, index) => (
     <Link
       key={item.name}
@@ -194,38 +161,8 @@ const user = useSelector((state) => state.auth.user);
       <span className="text-xl">{item.name}</span>
     </Link>
   ))}
-            {/* Auth for Mobile */}
-            {/* <div className="flex flex-col px-1 py-2 text-richblack-100 border-t border-slate-700">
-              {token ? (
-                <button
-                  onClick={handlelogout}
-                  className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200"
-                >
-                  <FaSignInAlt className="text-xl" />
-                  <span className="text-xl">Log out</span>
-                </button>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <FaSignInAlt className="text-xl" />
-                    <span className="text-xl">Log in</span>
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="flex items-center space-x-3 px-6 py-4 text-gray-300 hover:text-yellow-400 hover:bg-slate-800 transition-all duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <FaUserPlus className="text-xl" />
-                    <span className="text-xl">Sign up</span>
-                  </Link>
-                </>
-              )}
-            </div> */}
-          </div>
+
+        </div>
         </div>
       </div>
     </>
@@ -233,3 +170,46 @@ const user = useSelector((state) => state.auth.user);
 };
 
 export default Navbar;
+
+
+
+// ✅ What this line does:
+
+// if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//   setOpen(false);
+// }
+// 🔍 Explanation
+// dropdownRef.current
+
+// This refers to the actual DOM node you assigned via ref={dropdownRef}.
+
+// It only becomes non-null after the component mounts.
+
+// .contains(event.target)
+
+// This checks if the clicked element (i.e., event.target) is inside the dropdown area.
+
+// If the click is outside, contains returns false.
+
+// The condition:
+
+// if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+
+// This ensures:
+
+// The ref is valid (mounted).
+
+// The click was outside the dropdown.
+
+// ✅ If true, that means the user clicked outside, so we run setOpen(false) to close it.
+
+// 🧠 Your understanding is mostly correct!
+// ✔ Correct points you said:
+// ✅ Yes, useRef returns an object ({ current: ... }).
+
+// ✅ dropdownRef.current gives direct access to that specific DOM element.
+
+// ✅ We use .contains(event.target) to check if the click was inside or outside.
+
+// ✅ We close the dropdown (setOpen(false)) if it's an outside click.
+

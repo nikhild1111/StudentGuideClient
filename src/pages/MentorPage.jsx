@@ -302,7 +302,7 @@ import MentorCard from "../components/Mentor/MentorCard";
 import Pagination from "../components/Mentor/Paganation";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/LoadingSpinner";
-import HeroSection from "../components/Commonhooks/HeroSection";
+import HeroSection from "../components/Common/HeroSection";
 
 const MentorPage = () => {
   const dispatch = useDispatch();

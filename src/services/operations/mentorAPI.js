@@ -40,7 +40,7 @@ export function addMentor(formData, callback) {
     dispatch(setMentorLoading(true));
     // const toastId = toast.loading("Adding mentor...");
     try {
-      const { data } = await axios.post(`${BASE_URL}/add`, formData, getAuthHeaders(true));
+      const { data } = await axios.post(`${BASE_URL}/add`, formData, getAuthHeaders());
       if (!data.success) throw new Error(data.message);
       toast.success(data.message || "Mentor added");
       callback && callback(true);

@@ -495,8 +495,8 @@ const AdminPanel = () => {
         // return <GroceryManagement />;
          return <Dashboard />;
       case 'guide':
-        // return <GuideManagement />;
-         return <Dashboard />;
+        return <GuideManagement />;
+        //  return <Dashboard />;
       case 'mentor':
         // return <MentorManagement />;
          return <Dashboard />;
