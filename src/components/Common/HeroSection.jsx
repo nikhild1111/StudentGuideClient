@@ -24,8 +24,8 @@ const HeroSection = ({
       <div className="flex justify-center mt-6">
         <CTAButton
           active={true}
-          // linkto={token ? linkIfToken : linkIfNotToken}
-          linkto={token ? linkIfToken : linkIfToken}
+          linkto={token ? linkIfToken : linkIfNotToken}
+          // linkto={token ? linkIfToken : linkIfToken}
         >
           {buttonText}
         </CTAButton>
