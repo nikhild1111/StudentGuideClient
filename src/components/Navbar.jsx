@@ -94,7 +94,7 @@ console.log(user);
             {/* Logo */}
        <div className="flex items-center space-x-3">
   <Link to="/home" className="flex items-center space-x-3">
-    <div className="bg-white text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
+    <div className="bg-yellow-600 text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl">S</div>
     <div className="text-xl font-bold text-white m-[6px]">StudentGuide</div>
   </Link>
 </div>

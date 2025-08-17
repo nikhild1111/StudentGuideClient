@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Profile  from './pages/Profile';
 
+
 function App() {
 
   const dispatch=useDispatch();
@@ -54,6 +55,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/hos" element={<Hostel />} />
           <Route path="/profile" element={<Profile  />} />
+          <Route path="/books" element={<BooksPage />} />
           <Route path="/guideapplication" element={<GuideApplication />} />
           <Route path="/ApplyMentorForm" element={<ApplyMentorForm />} />
           

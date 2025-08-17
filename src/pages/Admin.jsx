@@ -475,7 +475,7 @@ const AdminPanel = () => {
     { id: 'grocery', label: 'Grocery', icon: ShoppingCart },
     { id: 'guide', label: 'Guide', icon: MapPin },
     { id: 'mentor', label: 'Mentor', icon: UserCheck },
-    { id: 'admission', label: 'Admission', icon: GraduationCap },
+    // { id: 'admission', label: 'Admission', icon: GraduationCap },
     { id: 'users', label: 'Users', icon: Users }
   ];
 
@@ -484,13 +484,13 @@ const AdminPanel = () => {
       case 'dashboard':
         return <Dashboard />;
       case 'hostels':
-        // return <HostelsManagement />;
-         return <Dashboard />;
+        return <HostelsManagement />;
+        //  return <Dashboard />;
       case 'food':
         return <FoodManagement />;
       case 'books':
-        // return <BooksManagement />;
-         return <Dashboard />;
+        return <BooksManagement />;
+        //  return <Dashboard />;
       case 'grocery':
         // return <GroceryManagement />;
          return <Dashboard />;
@@ -498,11 +498,11 @@ const AdminPanel = () => {
         return <GuideManagement />;
         //  return <Dashboard />;
       case 'mentor':
-        // return <MentorManagement />;
-         return <Dashboard />;
-      case 'admission':
-        // return <AdmissionManagement />;
-         return <Dashboard />;
+        return <MentorManagement />;
+        //  return <Dashboard />;
+      // case 'admission':
+      //   // return <AdmissionManagement />;
+      //    return <Dashboard />;
       case 'users':
         // return <UsersManagement />;
          return <Dashboard />;
@@ -583,7 +583,7 @@ const AdminPanel = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:ml-0">
+        <main className="flex-1 p-4 lg:ml-0 w-1">
           {renderContent()}
         </main>
       </div>

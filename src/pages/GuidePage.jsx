@@ -78,9 +78,6 @@ const GuidePage = () => {
         />
 
 
-
-
-
         {/* Search and Filter Section */}
         <div className="max-w-7xl mx-auto mb-4 px-4 flex-col gap-6">
          

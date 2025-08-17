@@ -3,7 +3,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ correct
 import { toast } from "react-hot-toast";
-
+import { getAuthHeaders } from "../../utils/authHeader";
 
 
 import {
@@ -129,54 +129,94 @@ export function login(email, password, navigate) {
   }
 }
 
+
+// Global variable to store the timeout ID
+let authTimeoutId = null;
+
 // ✅ LOGOUT
 export function logoutauth(navigate) {
-  return (dispatch) => {
-   dispatch(logout(null))
-    dispatch(clearCart())
-    localStorage.removeItem("user")
-    toast.success("Logged out 👋")
+  return async (dispatch) => {
+    try{
+
+  let res=    await axios.post(`${BASE_URL}/logout`, {},getAuthHeaders());
+    if (!res.data.success) {
+        throw new Error(res.data.message || "Logout failed");
+      }
+
+       if (authTimeoutId) {
+        clearTimeout(authTimeoutId);
+      }
+
+      
+         dispatch(logout(null))
+    dispatch(clearCart());
+   localStorage.removeItem("user");
+      localStorage.removeItem("token");
+
+    toast.success("Logged out ")
     navigate("/")
+
+    }catch(err){
+           console.error("Logout error:", err);
+      toast.error("Something went wrong during logout");
+    }
+
   }
 }
 
 
+
+
 export function checkAuthOnAppLoad(navigate) {
   return async (dispatch) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (!token) {
-      dispatch(logout(null))
+      dispatch(logout(null));
       return;
     }
 
     try {
-      const decoded = jwtDecode(token)
-      const currentTime = Date.now() / 1000
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
 
+      // ✅ If token expired, logout immediately
       if (decoded.exp < currentTime) {
-        dispatch(logout(null))
+        dispatch(logout(null));
         toast.error("Token Expired. Please login again.");
-        navigate('/home');  // ✅ works now
+        navigate("/home");
         return;
       }
 
-      dispatch(setLoading(true))
+      // ✅ Clear any previous timeout to avoid duplicates
+      if (authTimeoutId) {
+        clearTimeout(authTimeoutId);
+      }
+
+      // ✅ Calculate remaining time until token expires
+      const remainingTime = (decoded.exp - currentTime) * 1000;
+
+      // ✅ Set timeout to re-check auth when token is about to expire
+      authTimeoutId = setTimeout(() => {
+        dispatch(checkAuthOnAppLoad(navigate));
+      }, remainingTime);
+
+      // ✅ Fetch profile to confirm user is valid
+      dispatch(setLoading(true));
       const { data } = await axios.get(`${BASE_URL}/profile`, {
         headers: { Authorization: `Bearer ${token}` },
-      })
+      });
 
-      if (!data.success) throw new Error(data.message)
+      if (!data.success) throw new Error(data.message);
 
-      dispatch(setToken(token))
-      dispatch(setUser(data.user))
+      dispatch(setToken(token));
+      dispatch(setUser(data.user));
     } catch (error) {
-      const msg =
-        error.response?.data?.message || error.message || "Auth failed"
-      dispatch(logout(null))
-      toast.error(msg)
-      console.error("AUTH CHECK ERROR:", msg)
+      const msg = error.response?.data?.message || error.message || "Auth failed";
+      dispatch(logout(null));
+      toast.error(msg);
+      console.error("AUTH CHECK ERROR:", msg);
     } finally {
-      dispatch(setLoading(false))
+      dispatch(setLoading(false));
     }
-  }
+  };
 }

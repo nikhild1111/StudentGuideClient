@@ -8,6 +8,8 @@ import {
   setError,
 } from "../../slices/hostelSlice";
 
+import { getAuthHeaders } from "../../utils/authHeader";
+
 const Backend_url = import.meta.env.VITE_BACKEND_URL;
 const BASE_URL = `${Backend_url}/api/hostels`;
 
@@ -16,7 +18,7 @@ export function fetchHostels({ page = 1, limit = 6, search = "", type = "all" })
   return async (dispatch) => {
     dispatch(setLoading(true));
     try {
-      const { data } = await axios.post(`${BASE_URL}/fetch`, { page, limit, search, type });
+      const { data } = await axios.post(`${BASE_URL}/fetch`, { page, limit, search, type },getAuthHeaders() );
       if (!data.success) throw new Error(data.message);
      
         console.log(data.data);
@@ -41,9 +43,7 @@ export function createHostel(formData, callback) {
     dispatch(setLoading(true));
     const toastId = toast.loading("Creating hostel...");
     try {
-      const response = await axios.post(`${BASE_URL}/create`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(`${BASE_URL}/create`, formData, getAuthHeaders());
       if (!response.data.success) throw new Error(response.data.message);
       toast.success("Hostel created");
       callback && callback(); // refresh or navigate
@@ -62,9 +62,7 @@ export function updateHostel(id, formData, callback) {
     dispatch(setLoading(true));
     const toastId = toast.loading("Updating hostel...");
     try {
-      const response = await axios.put(`${BASE_URL}/update/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(`${BASE_URL}/update/${id}`, formData, getAuthHeaders());
       if (!response.data.success) throw new Error(response.data.message);
       toast.success("Hostel updated");
       callback && callback(); // refresh or navigate
