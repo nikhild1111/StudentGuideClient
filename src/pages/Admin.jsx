@@ -472,11 +472,11 @@ const AdminPanel = () => {
     { id: 'hostels', label: 'Hostels', icon: Building },
     { id: 'food', label: 'Food', icon: UtensilsCrossed },
     { id: 'books', label: 'Books', icon: BookOpen },
-    { id: 'grocery', label: 'Grocery', icon: ShoppingCart },
+    // { id: 'grocery', label: 'Grocery', icon: ShoppingCart },
     { id: 'guide', label: 'Guide', icon: MapPin },
     { id: 'mentor', label: 'Mentor', icon: UserCheck },
     // { id: 'admission', label: 'Admission', icon: GraduationCap },
-    { id: 'users', label: 'Users', icon: Users }
+    // { id: 'users', label: 'Users', icon: Users }
   ];
 
   const renderContent = () => {
@@ -575,10 +575,10 @@ const AdminPanel = () => {
               </button>
             ))}
             
-            <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors mt-8">
+            {/* <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors mt-8">
               <LogOut className="w-5 h-5" />
               <span>Logout</span>
-            </button>
+            </button> */}
           </nav>
         </aside>
 

@@ -51,7 +51,7 @@ console.log(user);
     { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
     { name: 'Food', icon: <FaUtensils />, path: '/food' },
     { name: 'Books', icon: <FaBook />, path: '/books' },
-    { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
+    // { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
     { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
     { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
   ];
