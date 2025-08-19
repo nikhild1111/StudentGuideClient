@@ -222,7 +222,7 @@ const HostelPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
-  const [userType, setUserType] = useState("admin"); // 'user' or 'admin'
+  const [userType, setUserType] = useState("user"); // 'user' or 'admin'
 
   const hostelsPerPage = 6;
 
