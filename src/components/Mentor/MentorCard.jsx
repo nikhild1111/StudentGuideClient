@@ -40,7 +40,7 @@ const MentorCard = ({ mentor }) => {
       {/* Image and Role Tag */}
       <div className="relative w-full h-[220px] overflow-hidden rounded-t-xl bg-black">
         <img
-          src={mentor.image}
+          src={mentor.image.url}
           alt={mentor.name}
           className="w-full h-full object-contain object-top"
         />

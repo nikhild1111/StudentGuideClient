@@ -1,82 +1,134 @@
-import React, { useEffect, useState } from "react";
-import { getProfile, addBook, removeBook, updateGuide, updateMentor } from "../services/operations/profileAPI";
-import { toast } from "react-hot-toast";
-import { User, Book, GraduationCap, UserCheck, Plus, Trash2, Edit } from "lucide-react";
 
-export default function ProfilePage() {
-  const [user, setUser] = useState(null);
-  const token = localStorage.getItem("token");
 
-  const fetchProfile = async () => {
-    try {
-      const { data } = await getProfile(token);
-      setUser(data.user);
-    } catch (err) {
-      toast.error("Failed to load profile");
+import React, { useState } from "react";
+import {
+  User,
+  BookOpen,
+  Settings,
+  LogOut,
+  Menu,
+  X
+} from "lucide-react";
+
+// Import your components
+import MyProfile from "../components/Profile/MyProfile";
+import MyBooks from "../components/Profile/MyBooks";
+import ProfileSettings from "../components/Profile/Settings";
+import { logoutauth } from "../services/operations/authAPI";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+const ProfilePanel = () => {
+
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+  const [activeTab, setActiveTab] = useState("profile");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Sidebar navigation items
+  const navItems = [
+    { id: "profile", label: "My Profile", icon: User },
+    { id: "books", label: "My Books", icon: BookOpen },
+    { id: "settings", label: "Settings", icon: Settings },
+    { id: "logout", label: "Logout", icon: LogOut },
+  ];
+
+  // Render content based on active tab
+  const renderContent = () => {
+    switch (activeTab) {
+      case "profile":
+        return <MyProfile />;
+      case "books":
+        return <MyBooks />;
+      case "settings":
+        return <ProfileSettings />;
+      case "logout":
+          dispatch(logoutauth(navigate));
+      default:
+        return <MyProfile />;
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  if (!user) return <p className="text-center mt-10">Loading...</p>;
-
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      {/* Personal Info */}
-      <div className="p-4 bg-white rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold flex items-center gap-2"><User /> Personal Info</h2>
-        <p><b>Name:</b> {user.name}</p>
-        <p><b>Email:</b> {user.email}</p>
-        <p><b>College:</b> {user.college}</p>
-        <p><b>Role:</b> {user.role}</p>
-        <button className="mt-2 flex items-center gap-1 text-blue-600" onClick={() => toast.success("Edit profile clicked")}> <Edit size={16}/> Edit </button>
-      </div>
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Header */}
+      <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            {/* Mobile menu toggle */}
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-700"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
 
-      {/* Books */}
-      <div className="p-4 bg-white rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold flex items-center gap-2"><Book /> Books</h2>
-        {user.booksProfile.length === 0 ? <p>No books added</p> : (
-          <ul className="list-disc ml-6">
-            {user.booksProfile.map((book) => (
-              <li key={book._id} className="flex justify-between items-center">
-                {book.title}
-                <button onClick={() => toast.success("Remove book clicked")}> <Trash2 size={16} className="text-red-600"/> </button>
-              </li>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                <span className="text-black font-bold text-sm">U</span>
+              </div>
+              <h1 className="text-xl font-bold">
+                <span className="text-white">My</span>
+                <span className="text-yellow-500 ml-1">Profile</span>
+              </h1>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex">
+        {/* Sidebar */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 border-r border-gray-700 transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
+        >
+          {/* Mobile close button */}
+          <div className="flex items-center justify-between p-4 lg:hidden">
+            <span className="text-lg font-semibold">Menu</span>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 rounded-lg hover:bg-gray-700"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Sidebar nav */}
+          <nav className="mt-8 px-4">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeTab === item.id
+                    ? "bg-yellow-500 text-black font-medium"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </button>
             ))}
-          </ul>
-        )}
-        <button className="mt-2 flex items-center gap-1 text-green-600" onClick={() => toast.success("Add book clicked")}>
-          <Plus size={16}/> Add Book
-        </button>
+          </nav>
+        </aside>
+
+        {/* Main content */}
+        <main className="flex-1 p-4 lg:ml-0">{renderContent()}</main>
       </div>
 
-      {/* Guide */}
-      <div className="p-4 bg-white rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold flex items-center gap-2"><GraduationCap /> Guide</h2>
-        {user.guideProfile ? (
-          <div className="flex justify-between items-center">
-            <span>{user.guideProfile.name || "Guide details"}</span>
-            <button onClick={() => toast.success("Edit guide clicked")}> <Edit size={16}/> </button>
-          </div>
-        ) : (
-          <button onClick={() => toast.success("Add guide clicked")} className="flex items-center gap-1 text-green-600"> <Plus size={16}/> Add Guide </button>
-        )}
-      </div>
-
-      {/* Mentor */}
-      <div className="p-4 bg-white rounded-2xl shadow-md">
-        <h2 className="text-xl font-semibold flex items-center gap-2"><UserCheck /> Mentor</h2>
-        {user.mentorProfile ? (
-          <div className="flex justify-between items-center">
-            <span>{user.mentorProfile.name || "Mentor details"}</span>
-            <button onClick={() => toast.success("Edit mentor clicked")}> <Edit size={16}/> </button>
-          </div>
-        ) : (
-          <button onClick={() => toast.success("Add mentor clicked")} className="flex items-center gap-1 text-green-600"> <Plus size={16}/> Add Mentor </button>
-        )}
-      </div>
+      {/* Mobile overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
-}
+};
+
+export default ProfilePanel;
+

@@ -21,7 +21,7 @@ const ViewMentorModal = ({ mentor, onClose }) => {
           {/* Profile Section */}
           <div className="text-center mb-6">
             <img
-              src={mentor.image || "/default-avatar.png"}
+              src={mentor.image.url || "/default-avatar.png"}
               alt="Mentor"
               className="w-28 h-28 rounded-full mx-auto mb-4 object-cover border-4 border-gray-700"
             />

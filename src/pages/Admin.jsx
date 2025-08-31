@@ -450,7 +450,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
-
+import Footer from '../components/Common/Footer';
 // Import individual components
 import Dashboard from '../components/Admin/Dashboard';
 import HostelsManagement from '../components/Admin/Hostels';
@@ -529,7 +529,8 @@ const AdminPanel = () => {
               </div>
               <h1 className="text-xl font-bold">
                 <span className="text-white">Student</span>
-                <span className="text-yellow-500">Guide</span>
+                <span className="text-white">Guide</span>
+                {/* <span className="text-yellow-500">Guide</span> */}
                 <span className="text-gray-400 ml-2">Admin</span>
               </h1>
             </div>
@@ -595,6 +596,10 @@ const AdminPanel = () => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+
+      <div>
+        <Footer/>
+      </div>
     </div>
   );
 };

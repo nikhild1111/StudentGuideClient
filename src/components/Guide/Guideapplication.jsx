@@ -110,6 +110,7 @@ const ApplyGuideForm = () => {
 
         if (success) {
           // ✅ Navigate to guide dashboard
+          
           navigate("/guide");
         } else {
           // ❌ Keep form as is, allow user to edit

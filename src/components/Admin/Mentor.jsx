@@ -47,7 +47,7 @@ const fetchData = useCallback(() => {
     searchMentors({
       page: currentPage,
       limit: mentorsPerPage,
-      search: searchTerm.trim(),
+      keyword: searchTerm.trim(), // ✅ FIXED: must be "keyword",
       ...filters, // include all filters
     })
   );
@@ -62,11 +62,12 @@ const fetchData = useCallback(() => {
   }, [fetchData]);
 
   // Reset filters
-  const handleResetFilters = () => {
- setFilters({ department: "", company: "", year: "", domain: "" });
-    setSearchTerm("");
-    setCurrentPage(1);
-  };
+const handleResetFilters = () => {
+  setFilters({ department: "", company: "", year: "", domain: "" });
+  setSearchTerm("");
+  setCurrentPage(1);
+  fetchData(); // 🔥 Trigger reload with cleared filters
+};
 
   const handleDelete = (id) => {
     setDeleteMentorId(id);
@@ -181,7 +182,8 @@ options={{
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           <img
-                            src={mentor.image || "/default-avatar.png"}
+                          // const [preview, setPreview] = useState(mentor.image?.url || null);
+                            src={mentor.image.url || "/default-avatar.png"}
                             alt={mentor.name}
                             className="w-12 h-12 rounded-full object-cover"
                           />

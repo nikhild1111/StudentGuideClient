@@ -364,7 +364,7 @@ import HotelCard from "../components/Food/FoodCard";
 import Pagination from "../components/HostelHandles/Paganation";
 import ErrorMessage from "../components/HostelHandles/Error";
 import NoResults from "../components/HostelHandles/Noresult";
-
+import Footer from "../components/Common/Footer";
 const HotelPage = () => {
   const dispatch = useDispatch();
   const { foods: hotels, pagination, loading, error } = useSelector(
@@ -532,6 +532,7 @@ const HotelPage = () => {
           onPageChange={handlePageChange}
         />
       </div>
+       <Footer/>
     </div>
   );
 };

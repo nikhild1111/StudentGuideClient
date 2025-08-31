@@ -1,165 +1,51 @@
+// 🔹 Why Debouncing is Needed?
+// Right now in your BooksPage, every time searchTerm or filters change, your useEffect calls:
+// useEffect(() => {
+//   loadBooks(1);
+// }, [filters, searchTerm]);
+// ⚠️ Problem: If a user types quickly in the search box (setSearchTerm), loadBooks will be called for every keystroke.
+// This means unnecessary API calls, which = slower app + wasted backend requests.
+
+// 👉 Debouncing solves this by delaying the function execution until the user stops typing for a small time window (e.g., 400ms).
+
+
+// 🔹 How to Add Debouncing?
+// useEffect(() => {
+//   const delay = setTimeout(() => {
+//     loadBooks(1); // only call after 400ms pause
+//   }, 400);
+
+//   return () => clearTimeout(delay); // cancel previous timeout if typing continues
+// }, [filters, searchTerm]);
+
+
+// }, [filters, searchTerm]);
+// Here’s what happens:
+
+// You type something → searchTerm changes.
+
+// React runs this useEffect again.
+
+// Inside effect → a new timer (setTimeout) is started that will call loadBooks(1) after 400ms.
+
+// But before React applies the new effect, it runs the cleanup function from the previous effect:
+
+// return () => clearTimeout(delay);
+// This cancels the previous pending timer.
+
+// So only the last timer (after you stop typing) will finish, and call loadBooks.
+// 👉 So the cycle is:
+
+// First render → start timer.
+
+// Next render (because user typed again) → clear old timer → start a new one.
+
+// This repeats until user stops typing → last timer is not cleared → after 400ms it runs loadBooks(1).
+
+// That’s how debouncing works with useEffect.
 
 
 
-// import React, { useEffect, useState } from "react";
-// import { Search, Filter, RefreshCcw, BookOpen, } from "lucide-react";
-// import { useDispatch, useSelector } from "react-redux";
-// import Pagination from "../components/Books/Pagination";
-// import FilterPanel from "../components/Books/FilterPanel";
-// import BookCard from "../components/Books/BookCard";
-// import HeroSection from "../components/Common/HeroSection";
-// import { fetchAllBooks } from "../services/operations/booksApi";
-// import Addbooks from "../components/Books/Addbooks";
-// import { useNavigate } from "react-router-dom";
-
-// const BooksPage = () => {
-//   const dispatch = useDispatch();
-//   const { books, pagination, loading } = useSelector((state) => state.book);
-//  const [showModal, setShowModal] = useState(false);
-//   const [editData, setEditData] = useState(null);
-//   const navigate=useNavigate();
-//     const token = useSelector((state) => state.auth.token);
-  
-//   const [filters, setFilters] = useState({
-//     department: "",
-//     year: "",
-//     semister:"",
-//   });
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [showFilters, setShowFilters] = useState(false);
-
-//   // Fetch books from backend
-//   const loadBooks = (page = 1) => {
-//     dispatch(
-//       fetchAllBooks({
-//         page,
-//         limit: 6,
-//         department: filters.department || undefined,
-//         year: filters.year || undefined,
-//         search: searchTerm || undefined,
-//       })
-//     );
-//   };
-
-//   // Initial load
-//   useEffect(() => {
-//     loadBooks(1);
-//   }, []);
-
-//   // Handle search click
-//   const handleSearch = () => {
-//     loadBooks(1);
-//   };
-
-//   // Handle filter change from FilterPanel
-//   const handleFilterChange = (newFilters) => {
-//     setFilters(newFilters);
-//   };
-
-//   // Handle reset
-//   const handleResetFilters = () => {
-//     setFilters({ department: "", year: "" , semister:"",});
-//     setSearchTerm("");
-//     loadBooks(1);
-//   };
-
-//   // Handle page change from Pagination component
-//   const handlePageChange = (page) => {
-//     loadBooks(page);
-//     window.scrollTo({ top: 0, behavior: "smooth" });
-//   };
-
-//   return (
-//         <div className="min-h-screen bg-gray-900 text-white">
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-//         {/* Header */}
-//         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-//           <div>
-//             <h1 className="text-2xl sm:text-3xl font-bold text-white">
-//               Books Management
-//             </h1>
-//             <p className="text-gray-400 mt-1">
-//               Manage and browse student books
-//             </p>
-//           </div>
-
-//           <button
-//             onClick={() => setShowAddModal(true)}
-//             className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-400 px-4 py-2 rounded-lg text-black font-medium transition-all duration-200 hover:scale-105 active:scale-95 w-full sm:w-auto"
-//           >
-//             <Plus className="w-5 h-5" />
-//             <span>Add Books</span>
-//           </button>
-//         </div>
-
-      
-//  <SearchAndFilterBar
-//       searchTerm={searchTerm}
-//       setSearchTerm={setSearchTerm}
-//       filters={filters}
-//       setFilters={setFilters}
-//       showFilters={showFilters}
-//       setShowFilters={setShowFilters}
-//       handleResetFilters={handleResetFilters}
-//       filterKeys={["department", "year", "gender"]}
-//       options={{
-//         department: ["CSE", "IT", "ECE", "EEE", "MECH"],
-//         year: ["1", "2", "3", "4"],
-//         gender: ["Male", "Female"],
-//       }}
-//       onChange={loadBooks} // 🔹 API auto-trigger
-//       debounceDelay={400}
-//     />
-
-//         {/* Books List */}
-//         {loading ? (
-//           <div className="text-center py-12 text-gray-400">Loading books...</div>
-//         ) : books.length > 0 ? (
-//           <>
-//             <div className="max-w-7xl mx-auto px-4 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-gray-900">
-//               {books.map((book) => (
-//                 <BookCard key={book._id} book={book} />
-//               ))}
-//             </div>
-//             <Pagination
-//               currentPage={pagination.currentPage}
-//               totalPages={pagination.totalPages}
-//               onPageChange={handlePageChange}
-//             />
-//           </>
-//         ) : (
-//           <div className="text-center py-12">
-//               <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-//               <p className="text-gray-400 text-lg mb-2">No books found</p>
-//               <p className="text-gray-500 text-sm">
-//                 Try adjusting your filters or search terms
-//               </p>
-//             </div>
-//         )}
-//       </div>
-
-
-//        {showConfirmDelete && (
-//         <ConfirmModel
-//           isOpen={showConfirmDelete}
-//           onConfirm={confirmDelete}
-//           onCancel={() => {
-//             setShowConfirmDelete(false);
-//             setDeleteBookId(null);
-//           }}
-//           title="Delete Books"
-//           message="Are you sure you want to delete these books? This action cannot be undone."
-//           confirmText="Delete"
-//           cancelText="Cancel"
-//         />
-//       )}
-
-
-//     </div>
-//   );
-// };
-
-// export default BooksPage;
 
 
 
@@ -221,9 +107,14 @@ const { user } = useSelector((state) => state.auth);
     loadBooks(1);
   }, []);
 
-  useEffect(() => {
-  loadBooks(1);
+useEffect(() => {
+  const delay = setTimeout(() => {
+    loadBooks(1);
+  }, 400);
+
+  return () => clearTimeout(delay);
 }, [filters, searchTerm]);
+
 
 
   // Reset Filters

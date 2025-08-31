@@ -1,43 +1,70 @@
 import axios from "axios";
+import { toast } from "react-hot-toast";
+import { getAuthHeaders } from "../../utils/authHeader";
+import { setLoading, setUser, logout } from "../../slices/authSlices";
+import { clearCart } from "../../slices/CartSlice";
+
 const Backend_url = import.meta.env.VITE_BACKEND_URL;
+const BASE_URL = `${Backend_url}/api/v1/user/profile`;
 
-const BASE_URL = `${Backend_url}/api/v1/auth`;
-import { getAuthHeaders } from "../../utils/authHeader"; // 🔐 import auth headers
+// ------------------ UPDATE PROFILE ------------------
+export function updateUserProfile(formData, callback) {
+  return async (dispatch) => {
+    const toastId = toast.loading("Updating profile...");
+    dispatch(setLoading(true));
 
+    try {
+      const { data } = await axios.put(`${BASE_URL}/update`, formData, getAuthHeaders());
 
+      if (!data.success) throw new Error(data.message);
 
-export const getProfile = async (token) => {
-  return axios.get(`${BASE_URL}/profile`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+      toast.success("Profile updated successfully ✅");
+      dispatch(setUser(data.user));
+      
+      // Call the callback with success
+      callback && callback(true);
 
-export const updateProfile = async (data, token) => {
-  return axios.put(`${BASE_URL}/profile/update`, data, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message || "Failed to update profile";
+      toast.error(msg);
+      console.error("UPDATE PROFILE ERROR:", msg);
+      
+      // Call the callback with failure
+      callback && callback(false);
+    } finally {
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
+  };
+}
+// ------------------ DELETE PROFILE ------------------
+export function deleteUserProfile(navigate) {
+  return async (dispatch) => {
+    const toastId = toast.loading("Deleting profile...");
+    dispatch(setLoading(true));
 
-export const addBook = async (bookId, token) => {
-  return axios.put(`${BASE_URL}/profile/books/add`, { bookId }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+    try {
+      const { data } = await axios.delete(`${BASE_URL}/delete`, getAuthHeaders());
 
-export const removeBook = async (bookId, token) => {
-  return axios.put(`${BASE_URL}/profile/books/remove`, { bookId }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+      if (!data.success) throw new Error(data.message);
 
-export const updateMentor = async (mentorId, token) => {
-  return axios.put(`${BASE_URL}/profile/mentor`, { mentorId }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+      toast.success("Profile deleted successfully ❌");
+      
+      // Clear auth & cart after deletion
+      dispatch(logout(null));
+      dispatch(clearCart());
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-export const updateGuide = async (guideId, token) => {
-  return axios.put(`${BASE_URL}/profile/guide`, { guideId }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-};
+      navigate("/"); // redirect to homepage
+
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message || "Failed to delete profile";
+      toast.error(msg);
+      console.error("DELETE PROFILE ERROR:", msg);
+    } finally {
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
+  };
+}

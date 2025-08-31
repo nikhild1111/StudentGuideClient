@@ -4,9 +4,9 @@ import { updateMentor } from "../../services/operations/mentorAPI";
 import toast from "react-hot-toast";
 import { X, Upload, Plus, Trash2 } from "lucide-react";
 
-const EditMentorModal = ({ mentor, onClose, onSuccess }) => {
+const EditMentorProfileModal = ({ mentor, onClose, onSuccess }) => {
   const dispatch = useDispatch();
-console.log(mentor,"---------")
+
   const [formData, setFormData] = useState({
     name: mentor.name || "",
     email: mentor.email || "",
@@ -20,9 +20,7 @@ console.log(mentor,"---------")
     resume: null, // For new file upload
   });
 
-  // console.log(" dd ",mentor.image)
-
-const [preview, setPreview] = useState(mentor.image?.url || null);
+  const [preview, setPreview] = useState(mentor.image?.url || null);
   const [loading, setLoading] = useState(false);
 
   const departmentOptions = [
@@ -135,7 +133,6 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
       updateMentor(mentor._id, submitData, (success) => {
         setLoading(false);
         if (success) {
-          toast.success("Mentor updated successfully");
           onSuccess && onSuccess();
         }
       })
@@ -144,13 +141,13 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999] p-4">
-      <div className="bg-gray-900 text-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-lg">
-        <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4">
+      <div className="bg-slate-900 text-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-lg">
+        <div className="sticky top-0 bg-slate-900 border-b border-slate-700 px-6 py-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Edit Mentor</h2>
+            <h2 className="text-xl font-semibold">Edit Mentor Profile</h2>
             <button 
               onClick={onClose} 
-              className="text-gray-400 hover:text-white text-xl p-1 hover:bg-gray-800 rounded"
+              className="text-slate-400 hover:text-white text-xl p-1 hover:bg-slate-800 rounded"
             >
               <X className="w-5 h-5" />
             </button>
@@ -164,11 +161,11 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
               <img
                 src={preview || "/default-avatar.png"}
                 alt="Mentor"
-                className="w-24 h-24 mx-auto rounded-full object-cover border-4 border-gray-700"
+                className="w-24 h-24 mx-auto rounded-full object-cover border-4 border-slate-700"
               />
             </div>
             <div className="flex justify-center">
-              <label className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors">
+              <label className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded cursor-pointer transition-colors">
                 <Upload className="w-4 h-4" />
                 <span className="text-sm">Change Image</span>
                 <input 
@@ -184,45 +181,53 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
           {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Name *</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Name <span className="text-red-400">*</span>
+              </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 placeholder="Enter mentor name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Email *</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Email <span className="text-red-400">*</span>
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 placeholder="Enter email address"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Phone</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Phone
+              </label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 placeholder="Enter phone number"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Gender</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Gender
+              </label>
               <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               >
                 {genderOptions.map(option => (
                   <option key={option} value={option}>{option}</option>
@@ -232,50 +237,62 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
           </div>
 
           {/* Academic Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Department *</label>
-              <select
-                name="department"
-                value={formData.department}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              >
-                <option value="">Select Department</option>
-                {departmentOptions.map(dept => (
-                  <option key={dept} value={dept}>{dept}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Passout Year *</label>
-              <input
-                type="number"
-                name="passoutYear"
-                value={formData.passoutYear}
-                onChange={handleInputChange}
-                min="1900"
-                max={new Date().getFullYear() + 10}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                placeholder="e.g., 2020"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">Domain/Specialization</label>
-              <input
-                type="text"
-                name="domain"
-                value={formData.domain}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                placeholder="e.g., Software Development, Data Science, etc."
-              />
+          <div className="bg-slate-800 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-yellow-400 mb-3">Academic Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Department <span className="text-red-400">*</span>
+                </label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
+                  <option value="">Select Department</option>
+                  {departmentOptions.map(dept => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Passout Year <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="number"
+                  name="passoutYear"
+                  value={formData.passoutYear}
+                  onChange={handleInputChange}
+                  min="1900"
+                  max={new Date().getFullYear() + 10}
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="e.g., 2020"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Domain/Specialization
+                </label>
+                <input
+                  type="text"
+                  name="domain"
+                  value={formData.domain}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="e.g., Software Development, Data Science, etc."
+                />
+              </div>
             </div>
           </div>
 
           {/* Companies */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Companies *</label>
+          <div className="bg-slate-800 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-yellow-400 mb-3">Work Experience</h3>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Companies <span className="text-red-400">*</span>
+            </label>
             <div className="space-y-2">
               {formData.companies.map((company, index) => (
                 <div key={index} className="flex gap-2">
@@ -283,7 +300,7 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
                     type="text"
                     value={company}
                     onChange={(e) => handleCompanyChange(index, e.target.value)}
-                    className="flex-1 px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     placeholder={`Company ${index + 1}`}
                   />
                   {formData.companies.length > 1 && (
@@ -309,8 +326,9 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
           </div>
 
           {/* Resume Upload */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Resume</label>
+          <div className="bg-slate-800 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-yellow-400 mb-3">Documents</h3>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Resume</label>
             <div className="flex items-center gap-4">
               {mentor.resume && (
                 <a
@@ -322,7 +340,7 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
                   View Current Resume
                 </a>
               )}
-              <label className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors">
+              <label className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded cursor-pointer transition-colors">
                 <Upload className="w-4 h-4" />
                 <span className="text-sm">Upload New Resume</span>
                 <input
@@ -337,19 +355,19 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 px-6 py-4">
-          <div className="flex justify-end gap-4">
+        <div className="sticky bottom-0 bg-slate-900 border-t border-slate-700 px-6 py-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
             <button
               onClick={onClose}
               disabled={loading}
-              className="px-6 py-2 bg-gray-600 hover:bg-gray-500 rounded transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-2 bg-slate-600 hover:bg-slate-500 rounded transition-colors disabled:opacity-50 text-white"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded text-black font-semibold transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-2 bg-yellow-400 hover:bg-yellow-500 rounded text-slate-900 font-semibold transition-colors disabled:opacity-50"
             >
               {loading ? "Updating..." : "Update Mentor"}
             </button>
@@ -360,4 +378,4 @@ const [preview, setPreview] = useState(mentor.image?.url || null);
   );
 };
 
-export default EditMentorModal;
+export default EditMentorProfileModal;

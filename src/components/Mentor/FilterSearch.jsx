@@ -175,6 +175,7 @@ const FilterSearch = () => {
   // 🔍 Trigger search
   const handleSearch = () => {
     const query = { keyword: search, ...filters };
+    console.log("Dispatching query:", query); 
     dispatch(searchMentors(query));
   };
 

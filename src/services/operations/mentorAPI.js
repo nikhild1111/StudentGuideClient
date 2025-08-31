@@ -42,7 +42,7 @@ export function addMentor(formData, callback) {
     try {
       const { data } = await axios.post(`${BASE_URL}/add`, formData, getAuthHeaders());
       if (!data.success) throw new Error(data.message);
-      toast.success(data.message || "Mentor added");
+      // toast.success(data.message || "Mentor added");
       callback && callback(true);
     } catch (err) {
       toast.error(err.response?.data?.message || err.message);
@@ -62,7 +62,7 @@ export function updateMentor(id, formData, callback) {
     try {
       const { data } = await axios.put(`${BASE_URL}/update/${id}`, formData, getAuthHeaders(true));
       if (!data.success) throw new Error(data.message);
-      toast.success(data.message || "Updated");
+      // toast.success(data.message || "Updated");
         callback && callback(true);
     } catch (err) {
       toast.error(err.response?.data?.message || err.message);
@@ -80,7 +80,7 @@ export function deleteMentor(id, callback) {
     try {
       const { data } = await axios.delete(`${BASE_URL}/delete/${id}`, getAuthHeaders());
       if (!data.success) throw new Error(data.message);
-      toast.success(data.message || "Deleted");
+      // toast.success(data.message || "Deleted");
       callback && callback();
     } catch (err) {
       toast.error(err.response?.data?.message || err.message);

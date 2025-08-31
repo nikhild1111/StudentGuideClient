@@ -208,7 +208,7 @@ import HostelCard from "../components/HostelHandles/HostelCard";
 import Pagination from "../components/HostelHandles/Paganation";
 import ErrorMessage from "../components/HostelHandles/Error";
 import NoResults from "../components/HostelHandles/Noresult";
-
+import Footer from "../components/Common/Footer";
 const HostelPage = () => {
   const dispatch = useDispatch();
   const { hostels, pagination, loading, error } = useSelector(
@@ -384,6 +384,7 @@ useEffect(() => {
           onPageChange={handlePageChange}
         />
       </div>
+       <Footer/>
     </div>
   );
 };
