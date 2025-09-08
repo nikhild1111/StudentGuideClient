@@ -30,7 +30,7 @@ const GuideCard = ({ guide }) => {
 
 
   return (
-    <div className="bg-[#1A1B1F] border border-gray-400 rounded-xl shadow-md hover:shadow-yellow-400/20 transition-all duration-300 mb-6">
+    <div className="bg-[#1A1B1F] border border-gray-400 rounded-xl shadow-md overflow-hidden hover:shadow-yellow-400/20 transition-all duration-300 mb-6">
       
       {/* Image and Role Tag */}
       <div className="relative w-full h-[220px] overflow-hidden rounded-t-xl bg-black">

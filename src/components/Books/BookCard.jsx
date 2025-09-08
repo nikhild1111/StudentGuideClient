@@ -1,82 +1,7 @@
-// import React from "react";
-// import { GraduationCap, Phone, BookOpen } from "lucide-react";
-// import { toast } from "react-hot-toast";
-// import { useNavigate } from "react-router-dom";
-
-// const BookCard = ({ book }) => {
-//   const navigate = useNavigate();
-//   const defaultImage = "https://via.placeholder.com/150x150?text=Book";
-
-//   const handlePay = () => {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//       navigate("/login");
-//       return;
-//     }
-//     toast.success("Payment Successful!");
-//   };
-
-//   return (
-//     <div className="bg-[#1A1B1F] border border-gray-400 rounded-xl shadow-md hover:shadow-yellow-400/20 transition-all duration-300">
-//       {/* Image */}
-//       <div className="relative w-full h-[200px] overflow-hidden rounded-t-xl bg-black">
-//         <img
-//           src={book.images?.[0]?.url || defaultImage}
-//           alt={book.booksname?.[0] || "Book"}
-//           className="w-full h-full object-contain object-center"
-//         />
-//       </div>
-
-//       {/* Content */}
-//       <div className="p-4 bg-gray-900 space-y-2">
-//         {/* Name */}
-//         <h3 className="text-white font-bold text-lg text-center">{book.name}</h3>
-
-//         {/* Department */}
-//         <div className="flex justify-center items-center gap-2 text-gray-300">
-//           <GraduationCap className="w-4 h-4 text-yellow-400" />
-//           <span>{book.department}</span>
-//         </div>
-
-//         {/* Year & Semester */}
-//         <div className="flex justify-center gap-4 text-sm text-gray-300">
-//           <span>Year {book.year}</span>
-//           <span>Sem {book.semister}</span>
-//         </div>
-
-//         {/* Books List */}
-//         <div className="flex flex-col items-center gap-1 text-gray-300 text-sm">
-//           {book.booksname?.map((b, i) => (
-//             <div key={i} className="flex gap-2 items-center">
-//               <BookOpen className="w-4 h-4 text-yellow-400" />
-//               <span>{b}</span>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Price & Pay */}
-//         <div className="flex justify-between items-center pt-4 border-t border-gray-700 mt-3">
-//           <button
-//             onClick={handlePay}
-//             className="text-sm font-semibold bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-300 transition"
-//           >
-//             Pay ₹{book.price}
-//           </button>
-//           <div className="flex items-center gap-2">
-//             <Phone className="w-4 h-4 text-yellow-400" />
-//             <span className="text-xs text-white">{book.contact}</span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BookCard;
-
 
 
 import React, { useState } from "react";
+import { toast } from "react-hot-toast"; 
 import { GraduationCap, Phone, BookOpen, ChevronLeft, ChevronRight, Eye, Edit, Trash2, MapPin, User } from "lucide-react";
 import { useSelector } from "react-redux";
 const BookCard = ({  book, user, onEdit, onDelete, onView}) => {
@@ -107,10 +32,11 @@ const BookCard = ({  book, user, onEdit, onDelete, onView}) => {
     const token = localStorage.getItem("token");
     if (!token) {
       // navigate("/login");
-      alert("Please login first");
+      toast.error("Please login first");
+ 
       return;
     }
-    alert("Payment Successful!");
+    toast.sucess("Payment Successful!");
   };
 
   return (
