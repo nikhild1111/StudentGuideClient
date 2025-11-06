@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// import { logout } from "../../services/operations/authAPI";
-
-// import useUserRole from '../components/Commonhooks/UseUseRole'
 import { useSelector, useDispatch } from 'react-redux';
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { VscDashboard, VscSignOut } from "react-icons/vsc";
@@ -30,8 +27,6 @@ const dispatch=useDispatch();
 const user = useSelector((state) => state.auth.user);
 console.log(user);
 
-//  const { role, loading } = useUserRole();
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
 
@@ -47,11 +42,9 @@ console.log(user);
 
   const menuItems = [
     { name: 'Home', icon: <FaHome />, path: '/home' },
-    // { name: 'Admission', icon: <FaUniversity />, path: '/admission' },
     { name: 'Hostels', icon: <FaBed />, path: '/hostels' },
     { name: 'Food', icon: <FaUtensils />, path: '/food' },
     { name: 'Books', icon: <FaBook />, path: '/books' },
-    // { name: 'Grocery', icon: <FaShoppingCart />, path: '/grocery' },
     { name: 'Guide', icon: <FaQuestionCircle />, path: '/guide' },
     { name: 'Mentor', icon: <FaUserFriends />, path: '/mentor' },
   ];
@@ -63,7 +56,6 @@ console.log(user);
       path: '/admin',
     });
   }
-
 
   
   // Escape key + scroll lock
@@ -87,8 +79,8 @@ console.log(user);
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="bg-richblack-900 backdrop-blur-sm shadow-2xl border-b-[0.5px]">
+      {/* Navbar - Added fixed positioning and z-index */}
+      <nav className="fixed top-0 left-0 right-0 bg-richblack-900 backdrop-blur-sm shadow-2xl border-b-[0.5px] z-[100]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -133,7 +125,7 @@ console.log(user);
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-1/2 bg-slate-900 shadow-2xl z-50 transition-transform duration-300 ease-in-out transform ${
+        className={`fixed top-0 right-0 h-full w-1/2 bg-slate-900 shadow-2xl z-[150] transition-transform duration-300 ease-in-out transform ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -170,7 +162,6 @@ console.log(user);
 };
 
 export default Navbar;
-
 
 
 // ✅ What this line does:

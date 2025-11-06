@@ -39,7 +39,7 @@ const ProfileDropdown = () => {
   }, []);
 
   return (
-    <div className="relative z-[999]" ref={dropdownRef}>
+   <div className="relative z-[200]" ref={dropdownRef}>
       <button
         onClick={() => setIsProfileDropdownOpen((prev) => !prev)}
         className="flex items-center gap-x-2"

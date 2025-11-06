@@ -34,7 +34,7 @@ function App() {
   }, [])
   return (
     <>
-      <div className="w-full bg-richblack-900">
+      <div className="w-full bg-richblack-900 pt-16">
 
         <Navbar></Navbar>
 
